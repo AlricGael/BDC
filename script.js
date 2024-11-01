@@ -141,7 +141,7 @@ document.addEventListener('DOMContentLoaded', function() {
             })
             .catch(error => {
                 console.error('Erreur:', error);
-                alert('Une erreur est survenue lors du test de connexion.');
+                alert('Une erreur est survenue mince lors du test de connexion.');
             });
     });
 });

@@ -2,10 +2,11 @@
 header('Content-Type: application/json');
 
 // Connexion à la base de données
-$servername = "https://gauargi.eus/2c97f1/";
-$username = "inst116774";
-$password = "pUyS1D6O89v0wdWs";
-$dbname = "inst116774";
+$servername = "aws-0-us-east-1.pooler.supabase.com:5432";
+$username = "postgres.pjbhjhjmcxyiapzlqdpo";
+$password = "3c9bQQsEK5";
+$dbname = "postgres";
+
 
 $conn = new mysqli($servername, $username, $password, $dbname);
 
