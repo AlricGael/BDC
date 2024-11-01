@@ -1,7 +1,7 @@
 <?php
 
 
-define('DB_SERVER', 'https://gauargi.eus/2c97f1/');
-define('DB_USERNAME', 'inst116774');
-define('DB_PASSWORD', 'pUyS1D6O89v0wdWs');
-define('DB_NAME', 'inst116774');
+define('DB_SERVER', 'aws-0-us-east-1.pooler.supabase.com:5432');
+define('DB_USERNAME', 'postgres.pjbhjhjmcxyiapzlqdpo');
+define('DB_PASSWORD', '3c9bQQsEK5?4');
+define('DB_NAME', 'postgres');
