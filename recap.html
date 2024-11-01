@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Récapitulatif des commandes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .search-container {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .search-container input {
+            width: 30%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .product-quantity {
+            text-align: center;
+        }
+        .total-amount {
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <h1>Récapitulatif des commandes</h1>
+    <div class="search-container">
+        <input type="text" id="orderSearch" placeholder="Rechercher par numéro de commande">
+        <input type="text" id="vendorSearch" placeholder="Rechercher par nom du vendeur">
+        <input type="text" id="clientSearch" placeholder="Rechercher par nom du client">
+    </div>
+   
+    <script>
+        function filterTable() {
+            var orderInput, vendorInput, clientInput, filter, table, tr, tdOrder, tdVendor, tdClient, i;
+            orderInput = document.getElementById("orderSearch");
+            vendorInput = document.getElementById("vendorSearch");
+            clientInput = document.getElementById("clientSearch");
+            table = document.getElementById("ordersTable");
+            tr = table.getElementsByTagName("tr");
+
+            for (i = 0; i < tr.length; i++) {
+                tdOrder = tr[i].getElementsByTagName("td")[1];
+                tdVendor = tr[i].getElementsByTagName("td")[2];
+                tdClient = tr[i].getElementsByTagName("td")[3];
+                if (tdOrder && tdVendor && tdClient) {
+                    if (tdOrder.textContent.toUpperCase().indexOf(orderInput.value.toUpperCase()) > -1 &&
+                        tdVendor.textContent.toUpperCase().indexOf(vendorInput.value.toUpperCase()) > -1 &&
+                        tdClient.textContent.toUpperCase().indexOf(clientInput.value.toUpperCase()) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+        document.getElementById('orderSearch').addEventListener('keyup', filterTable);
+        document.getElementById('vendorSearch').addEventListener('keyup', filterTable);
+        document.getElementById('clientSearch').addEventListener('keyup', filterTable);
+    </script>
+</body>
+</html>

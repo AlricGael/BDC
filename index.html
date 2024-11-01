@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bon de Commande Partenariat Noël 2024</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f8f9fa;
+            color: #343a40;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+        }
+        h1, h2, h3 {
+            color: #007bff;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+            font-weight: bold;
+        }
+        input[type="text"], input[type="number"], select {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: #ffffff;
+        }
+        .product-total {
+            text-align: right;
+        }
+        .order-summary {
+            margin-top: 20px;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 4px;
+        }
+        .total-products, .total-amount {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        button {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            border: none;
+            border-radius: 4px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Bon de Commande - Partenariat Noël 2024</h1>
+        <form id="order-form">
+            <div class="client-info">
+                <label for="reseller-class">Classe du Revendeur:</label>
+                <select id="reseller-class" name="reseller-class" required>
+                    <option value="">Sélectionner la classe</option>
+                    <option value="6">6</option>
+                    <option value="5">5</option>
+                    <option value="4">4</option>
+                    <option value="3">3</option>
+                </select>
+
+                <div id="class-number-container" style="display: none; margin-top: 10px;">
+                    <label for="class-number">Numéro de la Classe :</label>
+                    <select id="class-number" name="class-number">
+                        <option value="">Sélectionner le numéro de la classe</option>
+                        <!-- Options dynamiques à remplir selon la classe choisie -->
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label for="client_name">Nom du client</label>
+                    <input type="text" id="client_name" name="client_name" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="vendor_name">Nom du vendeur</label>
+                    <input type="text" id="vendor_name" name="vendor_name" required>
+                </div>
+            </div>
+
+            <h2>Articles à commander</h2>
+
+            <!-- Catégorie Spécialités -->
+            <h3>Spécialités</h3>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Article</th>
+                        <th>Poids</th>
+                        <th>Prix Unitaire</th>
+                        <th>Quantité</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <h2>Spécialités</h2>
+<table>
+    <tr>
+        <td>Praliné Croquant - Lait</td>
+        <td>210g</td>
+        <td>15,90€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="15.90" class="quantity" value="0">
+            <input type="hidden" name="ref_praline_lait" value="BCCGL">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Ganache au Piment d'Espelette - Noir</td>
+        <td>170g</td>
+        <td>14,00€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="14.00" class="quantity" value="0">
+            <input type="hidden" name="ref_ganache_espelette_noir" value="EGPN170">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Ganache Nature Chocolat - Noir</td>
+        <td>110g</td>
+        <td>11,90€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="11.90" class="quantity" value="0">
+            <input type="hidden" name="ref_ganache_nature_noir" value="PGNA110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Ganache à la Pulpe de Cerises Noires - Noir</td>
+        <td>110g</td>
+        <td>11,90€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="11.90" class="quantity" value="0">
+            <input type="hidden" name="ref_ganache_cerises_noires_noir" value="PGCN110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Ganache Caramel au Sel de Salies de Béarn - Lait</td>
+        <td>210g</td>
+        <td>15,90€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="15.90" class="quantity" value="0">
+            <input type="hidden" name="ref_ganache_caramel_lait" value="BCGG210">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+</table>
+
+<h2>Tablettes Inspiration Terroir</h2>
+<table>
+    <tr>
+        <td>Tablette Lait Caramel Sel de Salies de Béarn</td>
+        <td>80g</td>
+        <td>5,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="5.50" class="quantity" value="0">
+            <input type="hidden" name="ref_tablette_caramel_lait" value="TLC580">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Tablette Noir Piment</td>
+        <td>80g</td>
+        <td>5,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="5.50" class="quantity" value="0">
+            <input type="hidden" name="ref_tablette_noir_piment" value="TNPN80">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Tablette Noir Bayonne</td>
+        <td>80g</td>
+        <td>5,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="5.50" class="quantity" value="0">
+            <input type="hidden" name="ref_tablette_noir_bayonne" value="TNBA80">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Tablette Ambrée - Blanc (nouveau)</td>
+        <td>80g</td>
+        <td>5,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="5.50" class="quantity" value="0">
+            <input type="hidden" name="ref_tablette_ambree_blanc" value="TBA80">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+</table>
+
+<h2>Gourmandises à Grignoter</h2>
+<table>
+    <tr>
+        <td>Céréale Croustillante Chocolat - Lait</td>
+        <td>110g</td>
+        <td>7,70€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="7.70" class="quantity" value="0">
+            <input type="hidden" name="ref_cereale_lait" value="PCL110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Céréale Croustillante Chocolat Lait Caramel</td>
+        <td>110g</td>
+        <td>7,70€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="7.70" class="quantity" value="0">
+            <input type="hidden" name="ref_cereale_lait_caramel" value="PCLT110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Céréale Croustillante Chocolat - Noir</td>
+        <td>110g</td>
+        <td>7,70€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="7.70" class="quantity" value="0">
+            <input type="hidden" name="ref_cereale_noir" value="PCN110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Mendiant Noir Fruits Secs</td>
+        <td>110g</td>
+        <td>8,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="8.50" class="quantity" value="0">
+            <input type="hidden" name="ref_mendiant_noir" value="PVMN110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Mendiant Lait Fruits Secs</td>
+        <td>110g</td>
+        <td>8,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="8.50" class="quantity" value="0">
+            <input type="hidden" name="ref_mendiant_lait" value="PMLC110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Noisettes Lait Poudre de Cacao</td>
+        <td>110g</td>
+        <td>8,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="8.50" class="quantity" value="0">
+            <input type="hidden" name="ref_noisettes_lait" value="PNLC110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Amandes Noir Poudre de Cacao</td>
+        <td>110g</td>
+        <td>8,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="8.50" class="quantity" value="0">
+            <input type="hidden" name="ref_amandes_noir" value="PNAIC110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Pâte de Fruits - Pomme Framboise (nouveau)</td>
+        <td>250g</td>
+        <td>9,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="9.50" class="quantity" value="0">
+            <input type="hidden" name="ref_pate_fruits" value="EPTOP250">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Orangette enrobée Chocolat - Noir</td>
+        <td>130g</td>
+        <td>11,00€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="11.00" class="quantity" value="0">
+            <input type="hidden" name="ref_orangette_noir" value="PON130">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+</table>
+
+<h2>Assortiments de Bonbons de Chocolats</h2>
+<table>
+    <tr>
+        <td>Ballotin Festif - 24 Ganaches, Pralines, Pâtes d'Amandes - Noir</td>
+        <td>230g</td>
+        <td>16,70€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="16.70" class="quantity" value="0">
+            <input type="hidden" name="ref_ballotin_noir" value="BACM230F">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Ballotin Festif - 24 Ganaches, Pralines, Pâtes d'Amandes - Lait</td>
+        <td>230g</td>
+        <td>16,70€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="16.70" class="quantity" value="0">
+            <input type="hidden" name="ref_ballotin_lait" value="BACM230L">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Boîte Cadeau - 54 Ganaches, Pralines, Pâtes d'Amandes - Noir et Lait</td>
+        <td>530g</td>
+        <td>39,00€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="39.00" class="quantity" value="0">
+            <input type="hidden" name="ref_boite_cadeau" value="BACM540">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+</table>
+
+<h2>Chocolats de Noël</h2>
+<table>
+    <tr>
+        <td>Ganache Épices de Noël - Noir (nouveau)</td>
+        <td>110g</td>
+        <td>8,10€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="8.10" class="quantity" value="0">
+            <input type="hidden" name="ref_ganache_epices_noir" value="PGNN110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Truffe au Rhum</td>
+        <td>110g</td>
+        <td>8,10€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="8.10" class="quantity" value="0">
+            <input type="hidden" name="ref_truffe_rhum" value="PT110">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+</table>
+
+<h2>Le Coin des Enfants</h2>
+<table>
+    <tr>
+        <td>Moulage Sapin et sa Garniture</td>
+        <td>180g</td>
+        <td>11,00€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="11.00" class="quantity" value="0">
+            <input type="hidden" name="ref_moulage_sapin" value="PSANP3">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+    <tr>
+        <td>Mini Tablette Noël et sa Garniture</td>
+        <td>110g</td>
+        <td>6,50€</td>
+        <td>
+            <input type="number" name="quantity" min="0" data-price="6.50" class="quantity" value="0">
+            <input type="hidden" name="ref_tablette_noel" value="PSANL">
+        </td>
+        <td class="product-total">0,00€</td>
+    </tr>
+</table>
+
+
+            <div class="order-summary">
+                <div class="total-products">
+                    <h3>Total des Produits :</h3>
+                    <span id="total-produits">0 produits</span>
+                </div>
+
+                <label for="payment-method">Mode de paiement:</label>
+                <select id="payment-method" name="payment-method" required>
+                    <option value="cash">Espèces</option>
+                    <option value="cheque">Chèque</option>
+                </select>
+
+                <div id="cheque-number-container" style="display: none; margin-top: 10px;">
+                    <label for="cheque-number">Numéro de Chèque :</label>
+                    <input type="text" id="cheque-number" name="cheque-number" placeholder="Entrez le numéro de chèque">
+                </div>
+
+                <div class="total-amount">
+                    <h3>Total Commande:</h3>
+                    <span id="total-commande">0,00€</span>
+                </div>
+            </div>
+
+            <!-- Ajoutez ce bouton quelque part dans votre formulaire, par exemple juste avant le bouton de soumission -->
+
+            <button type="submit" class="submit-button">Valider</button>
+        </form>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+<body>
+    <h1>Gestion des commandes</h1>
+    
+    <!-- Votre formulaire de commande existant ici -->
+
+    <p>
+        <a href="recap.html" class="recap-link" target="_blank">Voir le récapitulatif des commandes</a>
+
+    </p>
+
+    <!-- Le reste de votre contenu ici -->
+
+</body>
+</html>
