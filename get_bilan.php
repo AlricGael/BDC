@@ -2,9 +2,9 @@
 header('Content-Type: application/json');
 
 // Connexion à la base de données
-$servername = "aws-0-us-east-1.pooler.supabase.com:5432";
+$servername = "https://aws-0-us-east-1.pooler.supabase.com:5432";
 $username = "postgres.pjbhjhjmcxyiapzlqdpo";
-$password = "3c9bQQsEK5";
+$password = "3c9bQQsEK5?4";
 $dbname = "postgres";
 
 
@@ -41,7 +41,7 @@ $sql = "SELECT
     SUM(PSANP3_quantity) as PSANP3,
     SUM(PSANL_quantity) as PSANL,
     SUM(total_amount) as total_amount
-FROM command_detail";
+FROM BDC_Elhuyar";
 
 $result = $conn->query($sql);
 
