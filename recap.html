@@ -68,34 +68,82 @@
         <input type="text" id="clientSearch" placeholder="Rechercher par nom du client">
     </div>
    
-    <script>
-        function filterTable() {
-            var orderInput, vendorInput, clientInput, filter, table, tr, tdOrder, tdVendor, tdClient, i;
-            orderInput = document.getElementById("orderSearch");
-            vendorInput = document.getElementById("vendorSearch");
-            clientInput = document.getElementById("clientSearch");
-            table = document.getElementById("ordersTable");
-            tr = table.getElementsByTagName("tr");
+    <div class="table-container">
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th>ID Commande</th>
+                    <th>Numéro de Commande</th>
+                    <th>Nom du Vendeur</th>
+                    <th>Nom du Client</th>
+                    <th>Montant Total</th>
+                </tr>
+            </thead>
+            <tbody id="ordersBody">
+                <!-- Les données seront insérées ici par JavaScript -->
+            </tbody>
+        </table>
+    </div>
 
-            for (i = 0; i < tr.length; i++) {
-                tdOrder = tr[i].getElementsByTagName("td")[1];
-                tdVendor = tr[i].getElementsByTagName("td")[2];
-                tdClient = tr[i].getElementsByTagName("td")[3];
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // Remplacez par votre URL Supabase
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Remplacez par votre clé publique
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function loadOrders() {
+            const { data, error } = await supabase
+                .from('BDC_Elhuyar') // Remplacez par le nom de votre table
+                .select('*');
+
+            if (error) {
+                console.error('Erreur lors du chargement des commandes:', error);
+                return;
+            }
+
+            const ordersBody = document.getElementById('ordersBody');
+            ordersBody.innerHTML = ''; // Réinitialiser le contenu
+
+            data.forEach(order => {
+                const row = `<tr>
+                    <td>${order.id}</td>
+                    <td>${order.order_number}</td>
+                    <td>${order.vendor_name}</td>
+                    <td>${order.client_name}</td>
+                    <td>${order.total_amount} €</td>
+                </tr>`;
+                ordersBody.innerHTML += row;
+            });
+        }
+
+        function filterTable() {
+            const orderInput = document.getElementById("orderSearch");
+            const vendorInput = document.getElementById("vendorSearch");
+            const clientInput = document.getElementById("clientSearch");
+            const table = document.getElementById("ordersTable");
+            const tr = table.getElementsByTagName("tr");
+
+            for (let i = 1; i < tr.length; i++) { // Commencer à 1 pour ignorer l'en-tête
+                const tdOrder = tr[i].getElementsByTagName("td")[1];
+                const tdVendor = tr[i].getElementsByTagName("td")[2];
+                const tdClient = tr[i].getElementsByTagName("td")[3];
                 if (tdOrder && tdVendor && tdClient) {
-                    if (tdOrder.textContent.toUpperCase().indexOf(orderInput.value.toUpperCase()) > -1 &&
-                        tdVendor.textContent.toUpperCase().indexOf(vendorInput.value.toUpperCase()) > -1 &&
-                        tdClient.textContent.toUpperCase().indexOf(clientInput.value.toUpperCase()) > -1) {
-                        tr[i].style.display = "";
-                    } else {
-                        tr[i].style.display = "none";
-                    }
+                    const orderMatch = tdOrder.textContent.toUpperCase().indexOf(orderInput.value.toUpperCase()) > -1;
+                    const vendorMatch = tdVendor.textContent.toUpperCase().indexOf(vendorInput.value.toUpperCase()) > -1;
+                    const clientMatch = tdClient.textContent.toUpperCase().indexOf(clientInput.value.toUpperCase()) > -1;
+
+                    tr[i].style.display = (orderMatch && vendorMatch && clientMatch) ? "" : "none";
                 }
             }
         }
 
-        document.getElementById('orderSearch').addEventListener('keyup', filterTable);
-        document.getElementById('vendorSearch').addEventListener('keyup', filterTable);
-        document.getElementById('clientSearch').addEventListener('keyup', filterTable);
+        document.addEventListener('DOMContentLoaded', function() {
+            loadOrders();
+
+            document.getElementById('orderSearch').addEventListener('keyup', filterTable);
+            document.getElementById('vendorSearch').addEventListener('keyup', filterTable);
+            document.getElementById('clientSearch').addEventListener('keyup', filterTable);
+        });
     </script>
 </body>
 </html>

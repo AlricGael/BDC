@@ -71,32 +71,36 @@
         </table>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        const products = [
-            'BCCGL', 'EGPN170', 'PGNA110', 'PGCN110', 'BCGG210', 'TLC580', 'TNPN80', 'TNBA80', 'TBA80',
-            'PCL110', 'PCLT110', 'PCN110', 'PVMN110', 'PMLC110', 'PNLC110', 'PNAIC110', 'EPTOP250',
-            'PON130', 'BACM230F', 'BACM230L', 'BACM540', 'PT110', 'PSANP3', 'PSANL'
-        ];
+        const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // Remplacez par votre URL Supabase
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Remplacez par votre clé publique
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        function loadData() {
-            fetch('get_bilan.php')
-                .then(response => response.json())
-                .then(data => {
-                    const summaryBody = document.getElementById('summaryBody');
-                    let html = '';
-                    
-                    products.forEach(product => {
-                        const quantity = data[product] || 0;
-                        html += `<tr><td>${product}</td><td>${quantity}</td></tr>`;
-                    });
+        async function loadData() {
+            const { data, error } = await supabase
+                .from('BDC_Elhuyar') // Remplacez par le nom de votre table de bilan
+                .select('*');
 
-                    html += `<tr><td>Montant total</td><td>${parseFloat(data.total_amount || 0).toFixed(2)} €</td></tr>`;
-                    summaryBody.innerHTML = html;
-                })
-                .catch(error => {
-                    console.error('Erreur:', error);
-                    document.getElementById('summaryBody').innerHTML = '<tr><td colspan="2">Erreur lors du chargement des données</td></tr>';
-                });
+            if (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                document.getElementById('summaryBody').innerHTML = '<tr><td colspan="2">Erreur lors du chargement des données</td></tr>';
+                return;
+            }
+
+            const summaryBody = document.getElementById('summaryBody');
+            summaryBody.innerHTML = ''; // Réinitialiser le contenu
+
+            data.forEach(item => {
+                const row = `<tr>
+                    <td>${item.product}</td>
+                    <td>${item.total_quantity}</td>
+                </tr>`;
+                summaryBody.innerHTML += row;
+            });
+
+            const totalRow = `<tr><td>Montant total</td><td>${parseFloat(data.total_amount || 0).toFixed(2)} €</td></tr>`;
+            summaryBody.innerHTML += totalRow;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
