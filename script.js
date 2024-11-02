@@ -15,6 +15,11 @@ document.addEventListener('DOMContentLoaded', function() {
     errorMessage.style.color = 'red';
     errorMessage.style.marginTop = '10px';
 
+    // Initialiser Supabase
+    const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // Remplacez par votre URL Supabase
+    const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Remplacez par votre clé publique
+    const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
     function updateTotals() {
         let totalProduits = 0;
         let totalCommande = 0;
@@ -126,7 +131,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    document.getElementById('test-connection-button').addEventListener('click', function() {
+    // Ajout de l'événement pour le bouton de test de connexion
+    document.getElementById('test-connection-button').addEventListener('click', async function() {
         // Informations de connexion
         const user = 'postgres.pjbhjhjmcxyiapzlqdpo';
         const password = '3c9bQQsEK5?4';
@@ -134,33 +140,17 @@ document.addEventListener('DOMContentLoaded', function() {
         const host = 'aws-0-us-east-1.pooler.supabase.com';
         const port = '5432';
 
-        // Créer une requête pour tester la connexion
-        fetch('http://localhost:3000/test-connection', { // Remplacez par l'URL de votre API
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify({
-                user: user,
-                password: password,
-                dbname: dbname,
-                host: host,
-                port: port
-            })
-        })
-        .then(response => response.json())
-        .then(data => {
-            // Afficher le résultat de la connexion
-            const resultDiv = document.getElementById('connection-result');
-            if (data.success) {
-                resultDiv.innerHTML = '<p style="color: green;">Connexion réussie à la base de données.</p>';
-            } else {
-                resultDiv.innerHTML = '<p style="color: red;">Erreur de connexion : ' + data.error + '</p>';
-            }
-        })
-        .catch(error => {
-            const resultDiv = document.getElementById('connection-result');
-            resultDiv.innerHTML = '<p style="color: red;">Erreur : ' + error.message + '</p>';
-        });
+        // Tester la connexion à la base de données
+        const { data, error } = await supabase
+            .from('BDC_Elhuyar') // Remplacez par le nom de votre table
+            .select('*')
+            .limit(1);
+
+        const resultDiv = document.getElementById('connection-result');
+        if (error) {
+            resultDiv.innerHTML = '<p style="color: red;">Erreur de connexion : ' + error.message + '</p>';
+        } else {
+            resultDiv.innerHTML = '<p style="color: green;">Connexion réussie à la base de données.</p>';
+        }
     });
 });
