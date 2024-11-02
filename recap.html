@@ -16,16 +16,6 @@
             color: #333;
             text-align: center;
         }
-        .search-container {
-            margin-bottom: 20px;
-            display: flex;
-            justify-content: space-between;
-        }
-        .search-container input {
-            width: 30%;
-            padding: 10px;
-            font-size: 16px;
-        }
         .table-container {
             overflow-x: auto;
         }
@@ -56,21 +46,14 @@
 </head>
 <body>
     <h1>Récapitulatif des commandes</h1>
-    <div class="search-container">
-        <input type="text" id="orderSearch" placeholder="Rechercher par numéro de commande">
-        <input type="text" id="vendorSearch" placeholder="Rechercher par nom du vendeur">
-        <input type="text" id="clientSearch" placeholder="Rechercher par nom du client">
-    </div>
    
     <div class="table-container">
         <table id="ordersTable">
             <thead>
                 <tr>
-                    <th>ID Commande</th>
-                    <th>Numéro de Commande</th>
-                    <th>Nom du Vendeur</th>
-                    <th>Nom du Client</th>
-                    <th>Montant Total</th>
+                    <th>ID Produit</th>
+                    <th>Order ID</th>
+                    <th>Quantité</th>
                 </tr>
             </thead>
             <tbody id="ordersBody">
@@ -81,62 +64,35 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
-        const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // Remplacez par votre URL Supabase
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Remplacez par votre clé publique
+        const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // URL de votre Supabase
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Clé anonyme
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
-        async function loadOrders() {
+        async function loadData() {
             const { data, error } = await supabase
-                .from('BDC_Elhuyar') // Remplacez par le nom de votre table
+                .from('BDC_Elhuyar') // Nom de votre table
                 .select('*'); // Sélectionnez toutes les colonnes
 
             if (error) {
-                console.error('Erreur lors du chargement des commandes:', error);
+                console.error('Erreur lors du chargement des données:', error);
                 return;
             }
 
             const ordersBody = document.getElementById('ordersBody');
             ordersBody.innerHTML = ''; // Réinitialiser le contenu
 
-            data.forEach(order => {
+            data.forEach(item => {
                 const row = `<tr>
-                    <td>${order.id}</td>
-                    <td>${order.order_number}</td>
-                    <td>${order.vendor_name}</td>
-                    <td>${order.client_name}</td>
-                    <td>${order.total_amount} €</td>
+                    <td>${item.id}</td>
+                    <td>${item.order_id}</td>
+                    <td>${item.v}</td>
                 </tr>`;
                 ordersBody.innerHTML += row;
             });
         }
 
-        function filterTable() {
-            const orderInput = document.getElementById("orderSearch");
-            const vendorInput = document.getElementById("vendorSearch");
-            const clientInput = document.getElementById("clientSearch");
-            const table = document.getElementById("ordersTable");
-            const tr = table.getElementsByTagName("tr");
-
-            for (let i = 1; i < tr.length; i++) { // Commencer à 1 pour ignorer l'en-tête
-                const tdOrder = tr[i].getElementsByTagName("td")[1];
-                const tdVendor = tr[i].getElementsByTagName("td")[2];
-                const tdClient = tr[i].getElementsByTagName("td")[3];
-                if (tdOrder && tdVendor && tdClient) {
-                    const orderMatch = tdOrder.textContent.toUpperCase().indexOf(orderInput.value.toUpperCase()) > -1;
-                    const vendorMatch = tdVendor.textContent.toUpperCase().indexOf(vendorInput.value.toUpperCase()) > -1;
-                    const clientMatch = tdClient.textContent.toUpperCase().indexOf(clientInput.value.toUpperCase()) > -1;
-
-                    tr[i].style.display = (orderMatch && vendorMatch && clientMatch) ? "" : "none";
-                }
-            }
-        }
-
         document.addEventListener('DOMContentLoaded', function() {
-            loadOrders();
-
-            document.getElementById('orderSearch').addEventListener('keyup', filterTable);
-            document.getElementById('vendorSearch').addEventListener('keyup', filterTable);
-            document.getElementById('clientSearch').addEventListener('keyup', filterTable);
+            loadData();
         });
     </script>
 </body>

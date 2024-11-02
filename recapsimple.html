@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Récapitulatif des commandes</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+        }
+        .table-container {
+            overflow-x: auto;
+        }
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            background-color: #fff;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #333;
+            text-transform: uppercase;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+    <h1>Récapitulatif des commandes</h1>
+   
+    <div class="table-container">
+        <table id="ordersTable">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Order ID</th>
+                    <th>Nom du Vendeur</th>
+                    <th>Nom du Client</th>
+                    <th>BCCGL Quantité</th>
+                    <th>EGPN170 Quantité</th>
+                    <th>PGNA110 Quantité</th>
+                    <th>PGCN110 Quantité</th>
+                    <th>BCGG210 Quantité</th>
+                    <th>TLC580 Quantité</th>
+                    <th>TNPN80 Quantité</th>
+                    <th>TNBA80 Quantité</th>
+                    <th>TBA80 Quantité</th>
+                    <th>PCL110 Quantité</th>
+                    <th>PCLT110 Quantité</th>
+                    <th>PCN110 Quantité</th>
+                    <th>PVMN110 Quantité</th>
+                    <th>PMLC110 Quantité</th>
+                    <th>PNLC110 Quantité</th>
+                    <th>PNAIC110 Quantité</th>
+                    <th>EPTOP250 Quantité</th>
+                    <th>PON130 Quantité</th>
+                    <th>BACM230F Quantité</th>
+                    <th>BACM230L Quantité</th>
+                    <th>BACM540 Quantité</th>
+                    <th>PT110 Quantité</th>
+                    <th>PSANP3 Quantité</th>
+                    <th>PSANL Quantité</th>
+                    <th>Méthode de Paiement</th>
+                    <th>Numéro de Chèque</th>
+                    <th>Montant Total</th>
+                    <th>Date de Création</th>
+                </tr>
+            </thead>
+            <tbody id="ordersBody">
+                <!-- Les données seront insérées ici par JavaScript -->
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script>
+        const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.com'; // URL de votre Supabase
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Clé anonyme
+        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+
+        async function loadData() {
+            const { data, error } = await supabase
+                .from('BDC_Elhuyar') // Nom de votre table
+                .select('*'); // Sélectionnez toutes les colonnes
+
+            if (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                return;
+            }
+
+            const ordersBody = document.getElementById('ordersBody');
+            ordersBody.innerHTML = ''; // Réinitialiser le contenu
+
+            data.forEach(item => {
+                const row = `<tr>
+                    <td>${item.id}</td>
+                    <td>${item.order_id}</td>
+                    <td>${item.vendor_name}</td>
+                    <td>${item.client_name}</td>
+                    <td>${item.BCCGL_quantity}</td>
+                    <td>${item.EGPN170_quantity}</td>
+                    <td>${item.PGNA110_quantity}</td>
+                    <td>${item.PGCN110_quantity}</td>
+                    <td>${item.BCGG210_quantity}</td>
+                    <td>${item.TLC580_quantity}</td>
+                    <td>${item.TNPN80_quantity}</td>
+                    <td>${item.TNBA80_quantity}</td>
+                    <td>${item.TBA80_quantity}</td>
+                    <td>${item.PCL110_quantity}</td>
+                    <td>${item.PCLT110_quantity}</td>
+                    <td>${item.PCN110_quantity}</td>
+                    <td>${item.PVMN110_quantity}</td>
+                    <td>${item.PMLC110_quantity}</td>
+                    <td>${item.PNLC110_quantity}</td>
+                    <td>${item.PNAIC110_quantity}</td>
+                    <td>${item.EPTOP250_quantity}</td>
+                    <td>${item.PON130_quantity}</td>
+                    <td>${item.BACM230F_quantity}</td>
+                    <td>${item.BACM230L_quantity}</td>
+                    <td>${item.BACM540_quantity}</td>
+                    <td>${item.PT110_quantity}</td>
+                    <td>${item.PSANP3_quantity}</td>
+                    <td>${item.PSANL_quantity}</td>
+                    <td>${item.method_of_payment}</td>
+                    <td>${item.check_number}</td>
+                    <td>${item.total_amount}</td>
+                    <td>${item.creation_date}</td>
+                </tr>`;
+                ordersBody.innerHTML += row;
+            });
+        }
+
+        loadData();
+    </script>
+</body>
+</html>
