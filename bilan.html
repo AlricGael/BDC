@@ -80,7 +80,7 @@
         async function loadData() {
             const { data, error } = await supabase
                 .from('BDC_Elhuyar') // Remplacez par le nom de votre table de bilan
-                .select('BCCGL_quantity') // Sélectionnez les colonnes nécessaires
+                .select('*') // Sélectionnez les colonnes nécessaires
                 .sum('v'); // Calculez la somme des quantités
 
             if (error) {

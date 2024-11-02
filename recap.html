@@ -52,12 +52,6 @@
         tr:nth-child(even) {
             background-color: #f9f9f9;
         }
-        .product-quantity {
-            text-align: center;
-        }
-        .total-amount {
-            font-weight: bold;
-        }
     </style>
 </head>
 <body>
@@ -88,13 +82,13 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
         const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // Remplacez par votre URL Supabase
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Remplacez par votre clé publique
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Remplacez par votre clé publique
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         async function loadOrders() {
             const { data, error } = await supabase
                 .from('BDC_Elhuyar') // Remplacez par le nom de votre table
-                .select('*');
+                .select('*'); // Sélectionnez toutes les colonnes
 
             if (error) {
                 console.error('Erreur lors du chargement des commandes:', error);
