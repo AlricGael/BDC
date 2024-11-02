@@ -423,14 +423,130 @@
 
             <button type="submit" class="submit-button">Valider</button>
         </form>
+    </div>    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+    const form = document.getElementById('order-form');
+    const quantities = form.querySelectorAll('.quantity');
+    const totalProduitsElement = document.getElementById('total-produits');
+    const totalCommandeElement = document.getElementById('total-commande');
 
-        <!-- Formulaire pour lancer le test de connexion à la base de données -->
-        <form id="db-connection-form" style="margin-top: 20px;">
-            <button type="button" id="test-connection-button">Tester la connexion à la base de données</button>
-            <div id="connection-result" style="margin-top: 10px;"></div>
-        </form>
-    </div>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
-    <script src="script.js"></script>
+    // Fonction pour mettre à jour les totaux
+    function updateTotals() {
+        let totalProduits = 0;
+        let totalCommande = 0;
+
+        quantities.forEach(quantity => {
+            const price = parseFloat(quantity.dataset.price); // Récupère le prix unitaire
+            const qty = parseInt(quantity.value) || 0; // Récupère la quantité
+
+            totalProduits += qty; // Compte le nombre total de produits
+            totalCommande += qty * price; // Calcule le total de la commande
+
+            const row = quantity.closest('tr'); // Trouve la ligne correspondante
+            const productTotalElement = row.querySelector('.product-total'); // Trouve la cellule de total
+            productTotalElement.textContent = (qty * price).toFixed(2) + '€'; // Met à jour le total du produit
+        });
+
+        totalProduitsElement.textContent = totalProduits + ' produits'; // Met à jour le total des produits
+        totalCommandeElement.textContent = totalCommande.toFixed(2) + '€'; // Met à jour le total de la commande
+    }
+
+    // Ajoute un événement d'écoute pour chaque champ de quantité
+    quantities.forEach(quantity => {
+        quantity.addEventListener('input', updateTotals); // Appelle updateTotals à chaque changement
+    });
+
+    // Appelle updateTotals pour initialiser les totaux au chargement
+    updateTotals();
+
+    // Gestionnaire d'événements pour le formulaire
+    form.addEventListener('submit', async (event) => {
+        event.preventDefault(); // Empêche le rechargement de la page
+
+        // Récupération des valeurs du formulaire
+        const vendorName = document.getElementById('vendor_name').value;
+        const clientName = document.getElementById('client_name').value;
+        const paymentMethod = document.getElementById('payment-method').value;
+        const chequeNumber = paymentMethod === 'cheque' ? document.getElementById('cheque-number').value : null;
+
+        // Récupération des quantités des produits
+        const productQuantities = {
+            BCCGL_quantity: 0,
+            EGPN170_quantity: 0,
+            PGNA110_quantity: 0,
+            PGCN110_quantity: 0,
+            BCGG210_quantity: 0,
+            TLC580_quantity: 0,
+            TNPN80_quantity: 0,
+            TNBA80_quantity: 0,
+            TBA80_quantity: 0,
+            PCL110_quantity: 0,
+            PCLT110_quantity: 0,
+            PCN110_quantity: 0,
+            PVMN110_quantity: 0,
+            PMLC110_quantity: 0,
+            PNLC110_quantity: 0,
+            PNAIC110_quantity: 0,
+            EPTOP250_quantity: 0,
+            PON130_quantity: 0,
+            BACM230F_quantity: 0,
+            BACM230L_quantity: 0,
+            BACM540_quantity: 0,
+            PT110_quantity: 0,
+            PSANP3_quantity: 0,
+            PSANL_quantity: 0,
+        };
+
+        // Remplir l'objet productQuantities avec les valeurs des champs de quantité
+        quantities.forEach(quantityInput => {
+            const productRef = quantityInput.previousElementSibling.value; // Récupère la référence du produit
+            const qty = parseInt(quantityInput.value) || 0; // Récupère la quantité
+            if (productRef in productQuantities) {
+                productQuantities[productRef] = qty; // Assigne la quantité à la bonne clé
+            }
+        });
+
+        // Calculer le total de la commande
+        const totalAmount = quantities.reduce((total, quantityInput) => {
+            const price = parseFloat(quantityInput.dataset.price);
+            const qty = parseInt(quantityInput.value) || 0;
+            return total + (price * qty);
+        }, 0).toFixed(2); // Total formaté à deux décimales
+
+        // Préparer les données à insérer
+        const orderData = {
+            vendor_name: vendorName,
+            client_name: clientName,
+            payment_method: paymentMethod,
+            cheque_number: chequeNumber,
+            total_amount: totalAmount,
+            ...productQuantities // Ajoute les quantités des produits
+        };
+
+        // Insérer les données dans Supabase
+        const { createClient } = supabase
+        const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
+        console.log('Supabase Instance: ', _supabase)
+
+        const { data, error } = await _supabase
+            .from('BDCElhuyar') // Remplacez par le nom de votre table
+            .insert([orderData]);
+
+        if (error) {
+            console.error('Erreur lors de l\'insertion:', error);
+            alert('Erreur lors de l\'enregistrement des données.');
+        } else {
+            alert('Données enregistrées avec succès !');
+            // Réinitialiser le formulaire si nécessaire
+            form.reset();
+            updateTotals(); // Réinitialiser les totaux affichés
+        }
+    });
+});
+
+
+</script>
 </body>
 </html>
