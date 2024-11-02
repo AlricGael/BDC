@@ -91,15 +91,17 @@
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.com'; // URL de votre Supabase
+        console.log("salut")
+        import { createClient } from '@supabase/supabase-js'
+        const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // URL de votre Supabase
         const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Clé anonyme
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
-
+        const supabase = createClient(supabaseUrl, supabaseKey);
+        loadData()
         async function loadData() {
             const { data, error } = await supabase
-                .from('BDC_Elhuyar') // Nom de votre table
+                .from('BDCElhuyar') // Nom de votre table
                 .select('*'); // Sélectionnez toutes les colonnes
 
             if (error) {
@@ -109,7 +111,7 @@
 
             const ordersBody = document.getElementById('ordersBody');
             ordersBody.innerHTML = ''; // Réinitialiser le contenu
-
+            
             data.forEach(item => {
                 const row = `<tr>
                     <td>${item.id}</td>
@@ -148,8 +150,7 @@
                 ordersBody.innerHTML += row;
             });
         }
-
-        loadData();
+        loadData()
     </script>
 </body>
 </html>
