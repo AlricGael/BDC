@@ -61,8 +61,8 @@
         <table class="summary-table" id="summaryTable">
             <thead>
                 <tr>
-                    <th>Produit</th>
-                    <th>Quantité totale</th>
+                    <th>ID Produit</th>
+                    <th>Quantité Totale</th>
                 </tr>
             </thead>
             <tbody id="summaryBody">
@@ -74,13 +74,15 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <script>
         const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // Remplacez par votre URL Supabase
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Remplacez par votre clé publique
+        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Remplacez par votre clé publique
         const supabase = supabase.createClient(supabaseUrl, supabaseKey);
 
         async function loadData() {
             const { data, error } = await supabase
                 .from('BDC_Elhuyar') // Remplacez par le nom de votre table de bilan
-                .select('*');
+                .select('id, order_id, v') // Sélectionnez les colonnes nécessaires
+                .group('id') // Groupez par ID produit
+                .sum('v'); // Calculez la somme des quantités
 
             if (error) {
                 console.error('Erreur lors du chargement des données:', error);
@@ -91,16 +93,14 @@
             const summaryBody = document.getElementById('summaryBody');
             summaryBody.innerHTML = ''; // Réinitialiser le contenu
 
+            // Afficher chaque produit avec sa quantité totale
             data.forEach(item => {
                 const row = `<tr>
-                    <td>${item.product}</td>
-                    <td>${item.total_quantity}</td>
+                    <td>${item.id}</td> <!-- Affichez l'ID du produit -->
+                    <td>${item.v}</td> <!-- Affichez la quantité totale -->
                 </tr>`;
                 summaryBody.innerHTML += row;
             });
-
-            const totalRow = `<tr><td>Montant total</td><td>${parseFloat(data.total_amount || 0).toFixed(2)} €</td></tr>`;
-            summaryBody.innerHTML += totalRow;
         }
 
         document.addEventListener('DOMContentLoaded', function() {
