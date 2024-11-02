@@ -61,11 +61,6 @@
             background-color: #e9ecef;
             border-radius: 4px;
         }
-        .total-products, .total-amount {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
         button {
             display: block;
             width: 100%;
@@ -100,7 +95,6 @@
                     <label for="class-number">Numéro de la Classe :</label>
                     <select id="class-number" name="class-number">
                         <option value="">Sélectionner le numéro de la classe</option>
-                        <!-- Options dynamiques à remplir selon la classe choisie -->
                     </select>
                 </div>
                 
@@ -116,8 +110,6 @@
             </div>
 
             <h2>Articles à commander</h2>
-
-            <!-- Catégorie Spécialités -->
             <h3>Spécialités</h3>
             <table>
                 <thead>
@@ -432,9 +424,10 @@
             <button type="submit" class="submit-button">Valider</button>
         </form>
 
-        <!-- Formulaire pour lancer le test de connexion à la base de données avec test_connection.php -->
-        <form action="test_connection.php" method="post" style="margin-top: 20px;">
-            <button type="submit">Tester la connexion à la base de données</button>
+        <!-- Formulaire pour lancer le test de connexion à la base de données -->
+        <form id="db-connection-form" style="margin-top: 20px;">
+            <button type="button" id="test-connection-button">Tester la connexion à la base de données</button>
+            <div id="connection-result" style="margin-top: 10px;"></div>
         </form>
     </div>
 

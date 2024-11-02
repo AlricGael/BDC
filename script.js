@@ -6,8 +6,8 @@ document.addEventListener('DOMContentLoaded', function() {
     const paymentMethod = document.getElementById('payment-method');
     const chequeNumberContainer = document.getElementById('cheque-number-container');
     const chequeNumber = document.getElementById('cheque-number');
-    const clientName = document.getElementById('client-name');
-    const resellerName = document.getElementById('reseller-name');
+    const clientName = document.getElementById('client_name');
+    const resellerName = document.getElementById('vendor_name');
     const resellerClass = document.getElementById('reseller-class');
     const classNumberContainer = document.getElementById('class-number-container');
     const classNumber = document.getElementById('class-number');
@@ -120,11 +120,47 @@ document.addEventListener('DOMContentLoaded', function() {
 
         if (confirm(resumeMessage)) {
             if (confirm('Confirmez-vous la soumission de la commande ?')) {
-                
                 const keepResellerInfo = confirm('Voulez-vous garder les informations du vendeur pour la prochaine commande ?');
-                
                 resetForm(keepResellerInfo);
             }
         }
+    });
+
+    document.getElementById('test-connection-button').addEventListener('click', function() {
+        // Informations de connexion
+        const user = 'postgres.pjbhjhjmcxyiapzlqdpo';
+        const password = '3c9bQQsEK5?4';
+        const dbname = 'postgres';
+        const host = 'aws-0-us-east-1.pooler.supabase.com';
+        const port = '5432';
+
+        // Créer une requête pour tester la connexion
+        fetch('http://localhost:3000/test-connection', { // Remplacez par l'URL de votre API
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                user: user,
+                password: password,
+                dbname: dbname,
+                host: host,
+                port: port
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            // Afficher le résultat de la connexion
+            const resultDiv = document.getElementById('connection-result');
+            if (data.success) {
+                resultDiv.innerHTML = '<p style="color: green;">Connexion réussie à la base de données.</p>';
+            } else {
+                resultDiv.innerHTML = '<p style="color: red;">Erreur de connexion : ' + data.error + '</p>';
+            }
+        })
+        .catch(error => {
+            const resultDiv = document.getElementById('connection-result');
+            resultDiv.innerHTML = '<p style="color: red;">Erreur : ' + error.message + '</p>';
+        });
     });
 });

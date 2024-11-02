@@ -16,3 +16,10 @@ define('DB_USER', $user);
 define('DB_PASSWORD', $password);
 define('DB_NAME', $dbname);
 ?>
+
+
+user = 'postgres.pjbhjhjmcxyiapzlqdpo'; // Remplacez par votre nom d'utilisateur
+password = '3c9bQQsEK5?4'; // Remplacez par votre mot de passe
+dbname = 'postgres'; // Remplacez par le nom de votre base de données
+host = 'aws-0-us-east-1.pooler.supabase.com'; // Retirez le 'https://'
+port = '5432';
