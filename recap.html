@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Récapitulatif des commandes</title>
+    <title>Récapitulatif des Totaux des Produits</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -45,15 +45,14 @@
     </style>
 </head>
 <body>
-    <h1>Récapitulatif des commandes</h1>
+    <h1>Récapitulatif des Totaux des Produits</h1>
    
     <div class="table-container">
         <table id="ordersTable">
             <thead>
                 <tr>
-                    <th>ID Produit</th>
-                    <th>Order ID</th>
-                    <th>Quantité</th>
+                    <th>Produit</th>
+                    <th>Quantité Totale</th>
                 </tr>
             </thead>
             <tbody id="ordersBody">
@@ -62,15 +61,16 @@
         </table>
     </div>
 
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        const supabaseUrl = 'https://pjbhjhjmcxyiapzlqdpo.supabase.co'; // URL de votre Supabase
-        const supabaseKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9zZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs'; // Clé anonyme
-        const supabase = supabase.createClient(supabaseUrl, supabaseKey);
+        const { createClient } = supabase
+        const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
+        console.log('Supabase Instance: ', _supabase)
 
         async function loadData() {
-            const { data, error } = await supabase
-                .from('BDC_Elhuyar') // Nom de votre table
+
+            const { data, error } = await _supabase
+                .from('BDCElhuyar') // Nom de votre table
                 .select('*'); // Sélectionnez toutes les colonnes
 
             if (error) {
@@ -78,17 +78,73 @@
                 return;
             }
 
-            const ordersBody = document.getElementById('ordersBody');
-            ordersBody.innerHTML = ''; // Réinitialiser le contenu
+            // Initialiser un objet pour stocker les totaux
+            const totals = {
+                BCCGL: 0,
+                EGPN170: 0,
+                PGNA110: 0,
+                PGCN110: 0,
+                BCGG210: 0,
+                TLC580: 0,
+                TNPN80: 0,
+                TNBA80: 0,
+                TBA80: 0,
+                PCL110: 0,
+                PCLT110: 0,
+                PCN110: 0,
+                PVMN110: 0,
+                PMLC110: 0,
+                PNLC110: 0,
+                PNAIC110: 0,
+                EPTOP250: 0,
+                PON130: 0,
+                BACM230F: 0,
+                BACM230L: 0,
+                BACM540: 0,
+                PT110: 0,
+                PSANP3: 0,
+                PSANL: 0,
+                Total: 0,
+            };
 
+            // Calculer les totaux pour chaque produit
             data.forEach(item => {
+                totals.BCCGL += item.BCCGL_quantity || 0;
+                totals.EGPN170 += item.EGPN170_quantity || 0;
+                totals.PGNA110 += item.PGNA110_quantity || 0;
+                totals.PGCN110 += item.PGCN110_quantity || 0;
+                totals.BCGG210 += item.BCGG210_quantity || 0;
+                totals.TLC580 += item.TLC580_quantity || 0;
+                totals.TNPN80 += item.TNPN80_quantity || 0;
+                totals.TNBA80 += item.TNBA80_quantity || 0;
+                totals.TBA80 += item.TBA80_quantity || 0;
+                totals.PCL110 += item.PCL110_quantity || 0;
+                totals.PCLT110 += item.PCLT110_quantity || 0;
+                totals.PCN110 += item.PCN110_quantity || 0;
+                totals.PVMN110 += item.PVMN110_quantity || 0;
+                totals.PMLC110 += item.PMLC110_quantity || 0;
+                totals.PNLC110 += item.PNLC110_quantity || 0;
+                totals.PNAIC110 += item.PNAIC110_quantity || 0;
+                totals.EPTOP250 += item.EPTOP250_quantity || 0;
+                totals.PON130 += item.PON130_quantity || 0;
+                totals.BACM230F += item.BACM230F_quantity || 0;
+                totals.BACM230L += item.BACM230L_quantity || 0;
+                totals.BACM540 += item.BACM540_quantity || 0;
+                totals.PT110 += item.PT110_quantity || 0;
+                totals.PSANP3 += item.PSANP3_quantity || 0;
+                totals.PSANL += item.PSANL_quantity || 0;
+                totals.Total += item.total_amount || 0;
+            });
+
+            // Insérer les totaux dans le tableau
+            const ordersBody = document.getElementById('ordersBody');
+            for (const [product, quantity] of Object.entries(totals)) {
                 const row = `<tr>
-                    <td>${item.id}</td>
-                    <td>${item.order_id}</td>
-                    <td>${item.v}</td>
+                    <td>${product}</td>
+                    <td>${quantity}</td>
                 </tr>`;
                 ordersBody.innerHTML += row;
-            });
+            }
         }
 
         document.addEventListener('DOMContentLoaded', function() {

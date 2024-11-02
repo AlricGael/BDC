@@ -51,10 +51,9 @@
         <table id="ordersTable">
             <thead>
                 <tr>
-                    <th>ID</th>
-                    <th>Order ID</th>
-                    <th>Nom du Vendeur</th>
-                    <th>Nom du Client</th>
+                    <th>Order ID <input type="text" id="searchId" oninput="filterTable()"></th>
+                    <th>Nom du Vendeur <input type="text" id="searchVendor" oninput="filterTable()"></th>
+                    <th>Nom du Client <input type="text" id="searchClient" oninput="filterTable()"></th>
                     <th>BCCGL Quantité</th>
                     <th>EGPN170 Quantité</th>
                     <th>PGNA110 Quantité</th>
@@ -108,13 +107,11 @@
                 console.error('Erreur lors du chargement des données:', error);
                 return;
             }
-            console.log(data)
             const ordersBody = document.getElementById('ordersBody');
             ordersBody.innerHTML = ''; // Réinitialiser le contenu
             
             data.forEach(item => {
                 const row = `<tr>
-                    <td>${item.id}</td>
                     <td>${item.order_id}</td>
                     <td>${item.vendor_name}</td>
                     <td>${item.client_name}</td>
@@ -151,6 +148,27 @@
             });
         }
         loadData()
+
+        function filterTable() {
+            const searchId = document.getElementById('searchId').value.toLowerCase();
+            const searchVendor = document.getElementById('searchVendor').value.toLowerCase();
+            const searchClient = document.getElementById('searchClient').value.toLowerCase();
+            const ordersBody = document.getElementById('ordersBody');
+            const rows = ordersBody.getElementsByTagName('tr');
+
+            for (let i = 0; i < rows.length; i++) {
+                const cells = rows[i].getElementsByTagName('td');
+                const orderIdMatch = cells[0].textContent.toLowerCase().includes(searchId);
+                const vendorMatch = cells[1].textContent.toLowerCase().includes(searchVendor);
+                const clientMatch = cells[2].textContent.toLowerCase().includes(searchClient);
+
+                if (orderIdMatch && vendorMatch && clientMatch) {
+                    rows[i].style.display = '';
+                } else {
+                    rows[i].style.display = 'none';
+                }
+            }
+        }
     </script>
 </body>
 </html>
