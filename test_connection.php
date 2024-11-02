@@ -1,21 +1,27 @@
-<?php
-header('Content-Type: application/json');
-require_once 'db_connection.php';
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Résultat du Test de Connexion</title>
+        <meta charset="utf-8">
+    </head>
+    <body>
+        <h1>Résultat du Test de Connexion</h1>  
+        <?php
+            // Inclure le fichier de configuration
+            require_once 'config.php';
 
-// Vérification de la chaîne de connexion
-if (!defined('DB_CONNECTION_STRING')) {
-    echo json_encode(['error' => 'La chaîne de connexion n\'est pas définie.']);
-    exit;
-}
+            // On établit la connexion
+            $conn = new mysqli(DB_HOST, DB_USER, DB_PASSWORD, DB_NAME, DB_PORT);
 
-// Utilisation de la chaîne de connexion mise à jour
-try {
-    $result = testDBConnection(DB_CONNECTION_STRING);
-    echo json_encode(['message' => $result]);
-} catch (PDOException $e) {
-    // Affichage de l'erreur précise pour les exceptions PDO
-    echo json_encode(['error' => 'Erreur de connexion à la base de données : ' . $e->getMessage()]);
-} catch (Exception $e) {
-    // Affichage de l'erreur générale
-    echo json_encode(['error' => 'Erreur : ' . $e->getMessage()]);
-}
+            // On vérifie la connexion
+            if ($conn->connect_error) {
+                echo '<p style="color: red;">Erreur de connexion : ' . $conn->connect_error . '</p>'; // Affiche l'erreur
+            } else {
+                echo '<p style="color: green;">Connexion réussie à la base de données.</p>'; // Affiche un message de succès
+            }
+
+            // Fermer la connexion
+            $conn->close();
+        ?>
+    </body>
+</html>

@@ -127,21 +127,4 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
     });
-
-    const testDbButton = document.createElement('button');
-    testDbButton.textContent = 'Tester la connexion à la base de données';
-    testDbButton.type = 'button';
-    form.appendChild(testDbButton);
-    
-    testDbButton.addEventListener('click', function() {
-        fetch('test_connection.php')
-            .then(response => response.json())
-            .then(data => {
-                alert(data.message);
-            })
-            .catch(error => {
-                console.error('Erreur:', error);
-                alert('Une erreur est survenue dqzdzdq lors du test de connexion.');
-            });
-    });
 });
