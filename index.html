@@ -492,10 +492,6 @@
     form.addEventListener('submit', async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page
 
-      
-
-        
-
         // Récupération des valeurs du formulaire
         const vendorName = document.getElementById('vendor_name').value;
         const clientName = document.getElementById('client_name').value;
@@ -508,6 +504,13 @@
         const chequeNumber = paymentMethod === 'cheque' ? document.getElementById('cheque-number').value : null;
         const totalAmount = totalprix;
 
+         // Afficher une fenêtre de confirmation avec le montant total
+        const confirmationMessage = `Le montant total est de ${totalAmount.toFixed(2)}€. Voulez-vous continuer ?`;
+        const userConfirmed = confirm(confirmationMessage);
+
+        if (!userConfirmed) {
+            return; // Ne pas envoyer la requête si l'utilisateur annule
+        }
         // Préparer les données à insérer
         const orderData = {
             order_id: orderid,
@@ -551,15 +554,6 @@
         const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
         console.log('Supabase Instance: ', _supabase)
 
-        const { id, error2 } = await _supabase
-            .from('BDCElhuyar') // Remplacez par le nom de votre table
-            .select('order_id')
-        if (error2) {
-            console.error('Erreur lors de la récupération des données:', error);
-        } else {
-           console.log(id)
-        }
-        
         const { data, error } = await _supabase
             .from('BDCElhuyar') // Remplacez par le nom de votre table
             .insert([orderData]);
@@ -595,6 +589,7 @@
 
             
         }
+
     });
 });
 
