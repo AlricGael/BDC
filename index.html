@@ -96,11 +96,11 @@
                 <label for="class-number">Numeros de classe</label>
                 <select id="class-number" name="class-number" required>
                     <option value="">Sélectionner la classe</option>
-                    <option value="6">1</option>
-                    <option value="5">2</option>
-                    <option value="4">3</option>
-                    <option value="3">4</option>
-                    <option value="3">5</option>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                    <option value="4">4</option>
+                    <option value="5">5</option>
                 </select>
 
                 <div id="class-number-container" style="display: none; margin-top: 10px;">
@@ -432,10 +432,21 @@
                 </div>
             </div>
 
-            <!-- Ajoutez ce bouton quelque part dans votre formulaire, par exemple juste avant le bouton de soumission -->
-
             <button type="submit" class="submit-button">Valider</button>
+
+            <div class="button-container" style="margin-top: 20px; display: flex; justify-content: space-between;">
+                <button type="button" onclick="window.location.href='recap.html'" style="margin-right: 10px;">
+                    Voir le Récapitulatif global
+                </button>
+                <button type="button" onclick="window.location.href='recapsimple.html'">
+                    Voir le Récapitulatif détaillé
+                </button>
+            </div>
+            
         </form>
+    <footer style="text-align: center; margin-top: 20px; padding: 10px; font-size: 14px; color: #6c757d;">
+    Tous droits réservés ALRIC Gaël
+    </footer>
     </div>    
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -481,13 +492,19 @@
     form.addEventListener('submit', async (event) => {
         event.preventDefault(); // Empêche le rechargement de la page
 
+      
+
+        
+
         // Récupération des valeurs du formulaire
         const vendorName = document.getElementById('vendor_name').value;
         const clientName = document.getElementById('client_name').value;
         const paymentMethod = document.getElementById('payment-method').value;
-        const Niveau = document.getElementById('reseller-class').value
-        const classe = document.getElementById('class-number').value
-        const orderid = document.getElementById('reseller-class').value;
+        const Niveau = document.getElementById('reseller-class').value;
+        const classe = document.getElementById('class-number').value;
+        console.log(Niveau);
+        console.log(classe);
+        const orderid = Niveau + classe;
         const chequeNumber = paymentMethod === 'cheque' ? document.getElementById('cheque-number').value : null;
         const totalAmount = totalprix;
 
@@ -533,6 +550,16 @@
         const { createClient } = supabase
         const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
         console.log('Supabase Instance: ', _supabase)
+
+        const { id, error2 } = await _supabase
+            .from('BDCElhuyar') // Remplacez par le nom de votre table
+            .select('order_id')
+        if (error2) {
+            console.error('Erreur lors de la récupération des données:', error);
+        } else {
+           console.log(id)
+        }
+        
         const { data, error } = await _supabase
             .from('BDCElhuyar') // Remplacez par le nom de votre table
             .insert([orderData]);
@@ -561,15 +588,38 @@
                 document.getElementById('vendor_name').value = vendorName
                 document.getElementById('reseller-class').value = Niveau;
                 document.getElementById('class-number').value = classe;
-                window.scrollTo(0, 0);
             }
+            document.getElementById('cheque-number-container').style.display = 'none'; // Masque le champ
+            document.getElementById('cheque-number').removeAttribute('required'); // Retire l'obligation
+            window.scrollTo(0, 0);
 
             
         }
     });
 });
 
+document.addEventListener('DOMContentLoaded', function() {
+    const paymentMethodSelect = document.getElementById('payment-method');
+    const chequeNumberContainer = document.getElementById('cheque-number-container');
+    const chequeNumberInput = document.getElementById('cheque-number');
 
+    // Fonction pour afficher ou masquer le champ numéro de chèque et gérer l'obligation
+    function toggleChequeNumber() {
+        if (paymentMethodSelect.value === 'cheque') {
+            chequeNumberContainer.style.display = 'block'; // Affiche le champ
+            chequeNumberInput.setAttribute('required', 'required'); // Rendre le champ obligatoire
+        } else {
+            chequeNumberContainer.style.display = 'none'; // Masque le champ
+            chequeNumberInput.removeAttribute('required'); // Retire l'obligation
+        }
+    }
+
+    // Écouteur d'événements pour le changement de mode de paiement
+    paymentMethodSelect.addEventListener('change', toggleChequeNumber);
+
+    // Appel initial pour définir l'état du champ au chargement de la page
+    toggleChequeNumber(); // Vérifie l'état du champ au chargement
+});
 </script>
 </body>
 </html>
