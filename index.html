@@ -29,6 +29,7 @@
             display: block;
             margin-top: 10px;
             font-weight: bold;
+            text-align: left;
         }
         input[type="text"], input[type="number"], select {
             width: 100%;
@@ -37,6 +38,7 @@
             margin-bottom: 15px;
             border: 1px solid #ced4da;
             border-radius: 4px;
+            box-sizing: border-box;
         }
         table {
             width: 100%;
@@ -46,7 +48,7 @@
         th, td {
             padding: 10px;
             border: 1px solid #dee2e6;
-            text-align: left;
+            text-align: center;
         }
         th {
             background-color: #007bff;
@@ -91,6 +93,16 @@
                     <option value="3">3</option>
                 </select>
 
+                <label for="class-number">Numeros de classe</label>
+                <select id="class-number" name="class-number" required>
+                    <option value="">Sélectionner la classe</option>
+                    <option value="6">1</option>
+                    <option value="5">2</option>
+                    <option value="4">3</option>
+                    <option value="3">4</option>
+                    <option value="3">5</option>
+                </select>
+
                 <div id="class-number-container" style="display: none; margin-top: 10px;">
                     <label for="class-number">Numéro de la Classe :</label>
                     <select id="class-number" name="class-number">
@@ -129,7 +141,7 @@
         <td>15,90€</td>
         <td>
             <input type="number" name="quantity" min="0" data-price="15.90" class="quantity" value="0">
-            <input type="hidden" name="ref_praline_lait" value="BCCGL">
+            <input type="hidden" name="ref_praline_lait">
         </td>
         <td class="product-total">0,00€</td>
     </tr>
@@ -316,7 +328,7 @@
 <h2>Assortiments de Bonbons de Chocolats</h2>
 <table>
     <tr>
-        <td>Ballotin Festif - 24 Ganaches, Pralines, Pâtes d'Amandes - Noir</td>
+        <td>Ballotin Festif - 24 Ganaches, Pralines, Pâtes d'Amandes - Noir et Lait</td>
         <td>230g</td>
         <td>16,70€</td>
         <td>
@@ -416,6 +428,7 @@
                 <div class="total-amount">
                     <h3>Total Commande:</h3>
                     <span id="total-commande">0,00€</span>
+                    <option value = '0,00'></option>
                 </div>
             </div>
 
@@ -431,6 +444,7 @@
     const quantities = form.querySelectorAll('.quantity');
     const totalProduitsElement = document.getElementById('total-produits');
     const totalCommandeElement = document.getElementById('total-commande');
+    let totalprix = 0;
 
     // Fonction pour mettre à jour les totaux
     function updateTotals() {
@@ -450,7 +464,9 @@
         });
 
         totalProduitsElement.textContent = totalProduits + ' produits'; // Met à jour le total des produits
+        totalprix = totalCommande
         totalCommandeElement.textContent = totalCommande.toFixed(2) + '€'; // Met à jour le total de la commande
+
     }
 
     // Ajoute un événement d'écoute pour chaque champ de quantité
@@ -469,67 +485,54 @@
         const vendorName = document.getElementById('vendor_name').value;
         const clientName = document.getElementById('client_name').value;
         const paymentMethod = document.getElementById('payment-method').value;
+        const Niveau = document.getElementById('reseller-class').value
+        const classe = document.getElementById('class-number').value
+        const orderid = document.getElementById('reseller-class').value;
         const chequeNumber = paymentMethod === 'cheque' ? document.getElementById('cheque-number').value : null;
-
-        // Récupération des quantités des produits
-        const productQuantities = {
-            BCCGL_quantity: 0,
-            EGPN170_quantity: 0,
-            PGNA110_quantity: 0,
-            PGCN110_quantity: 0,
-            BCGG210_quantity: 0,
-            TLC580_quantity: 0,
-            TNPN80_quantity: 0,
-            TNBA80_quantity: 0,
-            TBA80_quantity: 0,
-            PCL110_quantity: 0,
-            PCLT110_quantity: 0,
-            PCN110_quantity: 0,
-            PVMN110_quantity: 0,
-            PMLC110_quantity: 0,
-            PNLC110_quantity: 0,
-            PNAIC110_quantity: 0,
-            EPTOP250_quantity: 0,
-            PON130_quantity: 0,
-            BACM230F_quantity: 0,
-            BACM230L_quantity: 0,
-            BACM540_quantity: 0,
-            PT110_quantity: 0,
-            PSANP3_quantity: 0,
-            PSANL_quantity: 0,
-        };
-
-        // Remplir l'objet productQuantities avec les valeurs des champs de quantité
-        quantities.forEach(quantityInput => {
-            const productRef = quantityInput.previousElementSibling.value; // Récupère la référence du produit
-            const qty = parseInt(quantityInput.value) || 0; // Récupère la quantité
-            if (productRef in productQuantities) {
-                productQuantities[productRef] = qty; // Assigne la quantité à la bonne clé
-            }
-        });
-
-        // Calculer le total de la commande
-        const totalAmount = quantities.reduce((total, quantityInput) => {
-            const price = parseFloat(quantityInput.dataset.price);
-            const qty = parseInt(quantityInput.value) || 0;
-            return total + (price * qty);
-        }, 0).toFixed(2); // Total formaté à deux décimales
+        const totalAmount = totalprix;
 
         // Préparer les données à insérer
         const orderData = {
+            order_id: orderid,
             vendor_name: vendorName,
             client_name: clientName,
             payment_method: paymentMethod,
             cheque_number: chequeNumber,
             total_amount: totalAmount,
-            ...productQuantities // Ajoute les quantités des produits
+            BCCOL_quantity: parseInt(quantities[0].value),
+            EGPN170_quantity: parseInt(quantities[1].value),
+            PGNA110_quantity: parseInt(quantities[2].value),
+            PGCN110_quantity: parseInt(quantities[3].value),
+            BCGCS_quantity: parseInt(quantities[4].value),
+            TLCS80A_quantity: parseInt(quantities[5].value),
+            TNP80_quantity: parseInt(quantities[6].value),
+            TNBAY80_quantity: parseInt(quantities[7].value),
+            TBA80_quantity: parseInt(quantities[8].value),
+            PCL110_quantity: parseInt(quantities[9].value),
+            PCLC110_quantity: parseInt(quantities[10].value),
+            PCN110_quantity: parseInt(quantities[11].value),
+            PVMN110_quantity: parseInt(quantities[12].value),
+            PVML110_quantity: parseInt(quantities[13].value),
+            PNLC110_quantity: parseInt(quantities[14].value),
+            PANC110_quantity: parseInt(quantities[15].value),
+            ETPOF_quantity: parseInt(quantities[16].value),
+            PON130_quantity: parseInt(quantities[17].value),
+            BACM230F_quantity: parseInt(quantities[18].value),
+            BACN230F_quantity: parseInt(quantities[19].value),
+            BCACM540_quantity: parseInt(quantities[20].value),
+            PGNN_quantity: parseInt(quantities[21].value),
+            PT110_quantity: parseInt(quantities[22].value),
+            PSANP3_quantity: parseInt(quantities[23].value),
+            PSANL_quantity: parseInt(quantities[24].value),
+    
+
+
         };
 
         // Insérer les données dans Supabase
         const { createClient } = supabase
         const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
         console.log('Supabase Instance: ', _supabase)
-
         const { data, error } = await _supabase
             .from('BDCElhuyar') // Remplacez par le nom de votre table
             .insert([orderData]);
@@ -539,9 +542,29 @@
             alert('Erreur lors de l\'enregistrement des données.');
         } else {
             alert('Données enregistrées avec succès !');
-            // Réinitialiser le formulaire si nécessaire
-            form.reset();
-            updateTotals(); // Réinitialiser les totaux affichés
+
+            // Demander à l'utilisateur s'il souhaite garder le nom du vendeur et sa classe
+            const keepVendorInfo = confirm("Souhaitez-vous garder le nom du vendeur et sa classe ?");
+            
+            if (!keepVendorInfo) {
+                console.log('oui')
+                // Réinitialiser les champs si l'utilisateur ne souhaite pas garder les informations
+                document.getElementById('vendor_name').value = '';
+                document.getElementById('reseller-class').value = '';
+                // Si vous avez un champ pour le numéro de classe, réinitialisez-le également
+                document.getElementById('class-number').value = '';
+                form.reset();
+                updateTotals(); // Réinitialiser les totaux affichés
+            } else {
+                form.reset();
+                updateTotals(); // Réinitialiser les totaux affichés
+                document.getElementById('vendor_name').value = vendorName
+                document.getElementById('reseller-class').value = Niveau;
+                document.getElementById('class-number').value = classe;
+                window.scrollTo(0, 0);
+            }
+
+            
         }
     });
 });

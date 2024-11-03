@@ -80,56 +80,58 @@
 
             // Initialiser un objet pour stocker les totaux
             const totals = {
-                BCCGL: 0,
-                EGPN170: 0,
-                PGNA110: 0,
-                PGCN110: 0,
-                BCGG210: 0,
-                TLC580: 0,
-                TNPN80: 0,
-                TNBA80: 0,
-                TBA80: 0,
-                PCL110: 0,
-                PCLT110: 0,
-                PCN110: 0,
-                PVMN110: 0,
-                PMLC110: 0,
-                PNLC110: 0,
-                PNAIC110: 0,
-                EPTOP250: 0,
-                PON130: 0,
-                BACM230F: 0,
-                BACM230L: 0,
-                BACM540: 0,
-                PT110: 0,
-                PSANP3: 0,
-                PSANL: 0,
-                Total: 0,
+            BCCOL:0,
+            EGPN170:0,
+            PGNA110:0,
+            PGCN110:0,
+            BCGCS:0,
+            TLCS80A:0,
+            TNP80:0,
+            TNBAY80:0,
+            TBA80:0,
+            PCL110:0,
+            PCLC110:0,
+            PCN110:0,
+            PVMN110:0,
+            PVML110:0,
+            PNLC110:0,
+            PANC110:0,
+            ETPOF:0,
+            PON130:0,
+            BACM230F:0,
+            BACN230F:0,
+            BCACM540:0,
+            PGNN:0,
+            PT110:0,
+            PSANP3:0,
+            PSANL:0,
+            Total:0,
             };
 
             // Calculer les totaux pour chaque produit
             data.forEach(item => {
-                totals.BCCGL += item.BCCGL_quantity || 0;
+                totals.BCCOL += item.BCCOL_quantity || 0;
                 totals.EGPN170 += item.EGPN170_quantity || 0;
                 totals.PGNA110 += item.PGNA110_quantity || 0;
                 totals.PGCN110 += item.PGCN110_quantity || 0;
-                totals.BCGG210 += item.BCGG210_quantity || 0;
-                totals.TLC580 += item.TLC580_quantity || 0;
-                totals.TNPN80 += item.TNPN80_quantity || 0;
-                totals.TNBA80 += item.TNBA80_quantity || 0;
+                totals.BCGCS += item.BCGCS_quantity || 0;
+                totals.TLCS80A += item.TLCS80A_quantity || 0;
+                totals.TNP80 += item.TNP80_quantity || 0;
+                totals.TNBAY80 += item.TNBAY80_quantity || 0;
                 totals.TBA80 += item.TBA80_quantity || 0;
                 totals.PCL110 += item.PCL110_quantity || 0;
-                totals.PCLT110 += item.PCLT110_quantity || 0;
+                totals.PCLC110 += item.PCLC110_quantity || 0;
                 totals.PCN110 += item.PCN110_quantity || 0;
                 totals.PVMN110 += item.PVMN110_quantity || 0;
-                totals.PMLC110 += item.PMLC110_quantity || 0;
+                totals.PVML110 += item.PVML110_quantity || 0;
                 totals.PNLC110 += item.PNLC110_quantity || 0;
-                totals.PNAIC110 += item.PNAIC110_quantity || 0;
-                totals.EPTOP250 += item.EPTOP250_quantity || 0;
+                totals.PANC110 += item.PANC110_quantity || 0;
+                totals.ETPOF += item.ETPOF_quantity || 0;
                 totals.PON130 += item.PON130_quantity || 0;
                 totals.BACM230F += item.BACM230F_quantity || 0;
-                totals.BACM230L += item.BACM230L_quantity || 0;
-                totals.BACM540 += item.BACM540_quantity || 0;
+                totals.BACN230F += item.BACN230F_quantity || 0;
+                totals.BCACM540 += item.BCACM540_quantity || 0;
+                totals.PGNN += item.PGNN_quantity || 0;
                 totals.PT110 += item.PT110_quantity || 0;
                 totals.PSANP3 += item.PSANP3_quantity || 0;
                 totals.PSANL += item.PSANL_quantity || 0;

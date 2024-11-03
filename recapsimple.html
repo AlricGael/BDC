@@ -54,27 +54,28 @@
                     <th>Order ID <input type="text" id="searchId" oninput="filterTable()"></th>
                     <th>Nom du Vendeur <input type="text" id="searchVendor" oninput="filterTable()"></th>
                     <th>Nom du Client <input type="text" id="searchClient" oninput="filterTable()"></th>
-                    <th>BCCGL Quantité</th>
+                    <th>BCCOL Quantité</th>
                     <th>EGPN170 Quantité</th>
                     <th>PGNA110 Quantité</th>
                     <th>PGCN110 Quantité</th>
-                    <th>BCGG210 Quantité</th>
-                    <th>TLC580 Quantité</th>
-                    <th>TNPN80 Quantité</th>
-                    <th>TNBA80 Quantité</th>
+                    <th>BCGCS Quantité</th>
+                    <th>TLCS80A Quantité</th>
+                    <th>TNP80 Quantité</th>
+                    <th>TNBAY80 Quantité</th>
                     <th>TBA80 Quantité</th>
                     <th>PCL110 Quantité</th>
-                    <th>PCLT110 Quantité</th>
+                    <th>PCLC110 Quantité</th>
                     <th>PCN110 Quantité</th>
                     <th>PVMN110 Quantité</th>
-                    <th>PMLC110 Quantité</th>
+                    <th>PVML110 Quantité</th>
                     <th>PNLC110 Quantité</th>
-                    <th>PNAIC110 Quantité</th>
-                    <th>EPTOP250 Quantité</th>
+                    <th>PANC110 Quantité</th>
+                    <th>ETPOF Quantité</th>
                     <th>PON130 Quantité</th>
                     <th>BACM230F Quantité</th>
-                    <th>BACM230L Quantité</th>
-                    <th>BACM540 Quantité</th>
+                    <th>BACN230F Quantité</th>
+                    <th>BCACM540 Quantité</th>
+                    <th>PGNN Quantité</th>
                     <th>PT110 Quantité</th>
                     <th>PSANP3 Quantité</th>
                     <th>PSANL Quantité</th>
@@ -115,32 +116,33 @@
                     <td>${item.order_id}</td>
                     <td>${item.vendor_name}</td>
                     <td>${item.client_name}</td>
-                    <td>${item.BCCGL_quantity}</td>
+                    <td>${item.BCCOL_quantity}</td>
                     <td>${item.EGPN170_quantity}</td>
                     <td>${item.PGNA110_quantity}</td>
                     <td>${item.PGCN110_quantity}</td>
-                    <td>${item.BCGG210_quantity}</td>
-                    <td>${item.TLC580_quantity}</td>
-                    <td>${item.TNPN80_quantity}</td>
-                    <td>${item.TNBA80_quantity}</td>
+                    <td>${item.BCGCS_quantity}</td>
+                    <td>${item.TLCS80A_quantity}</td>
+                    <td>${item.TNP80_quantity}</td>
+                    <td>${item.TNBAY80_quantity}</td>
                     <td>${item.TBA80_quantity}</td>
                     <td>${item.PCL110_quantity}</td>
-                    <td>${item.PCLT110_quantity}</td>
+                    <td>${item.PCLC110_quantity}</td>
                     <td>${item.PCN110_quantity}</td>
                     <td>${item.PVMN110_quantity}</td>
-                    <td>${item.PMLC110_quantity}</td>
+                    <td>${item.PVML110_quantity}</td>
                     <td>${item.PNLC110_quantity}</td>
-                    <td>${item.PNAIC110_quantity}</td>
-                    <td>${item.EPTOP250_quantity}</td>
+                    <td>${item.PANC110_quantity}</td>
+                    <td>${item.ETPOF_quantity}</td>
                     <td>${item.PON130_quantity}</td>
                     <td>${item.BACM230F_quantity}</td>
-                    <td>${item.BACM230L_quantity}</td>
-                    <td>${item.BACM540_quantity}</td>
+                    <td>${item.BACN230F_quantity}</td>
+                    <td>${item.BCACM540_quantity}</td>
+                    <td>${item.PGNN_quantity}</td>
                     <td>${item.PT110_quantity}</td>
                     <td>${item.PSANP3_quantity}</td>
                     <td>${item.PSANL_quantity}</td>
-                    <td>${item.method_of_payment}</td>
-                    <td>${item.check_number}</td>
+                    <td>${item.payment_method}</td>
+                    <td>${item.cheque_number}</td>
                     <td>${item.total_amount}</td>
                     <td>${item.creation_date}</td>
                 </tr>`;
