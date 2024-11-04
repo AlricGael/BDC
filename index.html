@@ -111,12 +111,12 @@
                 </div>
                 
                 <div class="form-group">
-                    <label for="client_name">Nom du client</label>
+                    <label for="client_name">Nom Prénom du client</label>
                     <input type="text" id="client_name" name="client_name" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="vendor_name">Nom du vendeur</label>
+                    <label for="vendor_name">Nom Prénom du vendeur</label>
                     <input type="text" id="vendor_name" name="vendor_name" required>
                 </div>
             </div>
@@ -443,6 +443,13 @@
                 </button>
             </div>
             
+            <!-- Nouveau bouton pour la page problème -->
+            <div style="margin-top: 20px; display: none;">
+                <button type="button" onclick="window.location.href='probleme.html'" style="background-color: #dc3545;">
+                    Signaler un problème
+                </button>
+            </div>
+
         </form>
     <footer style="text-align: center; margin-top: 20px; padding: 10px; font-size: 14px; color: #6c757d;">
     Tous droits réservés ALRIC Gaël
@@ -493,8 +500,8 @@
         event.preventDefault(); // Empêche le rechargement de la page
 
         // Récupération des valeurs du formulaire
-        const vendorName = document.getElementById('vendor_name').value;
-        const clientName = document.getElementById('client_name').value;
+        const vendorName = document.getElementById('vendor_name').value.toUpperCase();
+        const clientName = document.getElementById('client_name').value.toUpperCase();
         const paymentMethod = document.getElementById('payment-method').value;
         const Niveau = document.getElementById('reseller-class').value;
         const classe = document.getElementById('class-number').value;

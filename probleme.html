@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signaler un problème</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        input[type="text"], textarea {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <!-- Nouveau bouton de retour -->
+    <div style="margin-bottom: 20px;">
+        <button type="button" onclick="window.location.href='index.html'" style="background-color: #6c757d;">
+            Retour à l'accueil
+        </button>
+    </div>
+
+    <h1>Signaler un problème</h1>
+    <form action="/submit-problem" method="POST" id="problemForm">
+        <div class="form-group">
+            <label for="classe">Classe :</label>
+            <input type="text" id="classe" name="classe" required>
+        </div>
+
+        <div class="form-group">
+            <label for="vendeur">Nom du vendeur :</label>
+            <input type="text" id="vendeur" name="vendeur" required>
+        </div>
+
+        <div class="form-group">
+            <label for="client">Nom du client :</label>
+            <input type="text" id="client" name="client" required>
+        </div>
+
+        <div class="form-group">
+            <label for="titre">Titre du problème :</label>
+            <input type="text" id="titre" name="titre" required>
+        </div>
+
+        <div class="form-group">
+            <label for="description">Description du problème :</label>
+            <textarea id="description" name="description" rows="6" required></textarea>
+        </div>
+
+        <button type="submit" class="submit-button">Envoyer</button>
+    </form>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        form.addEventListener('submit', async (event) => {
+            e.preventDefault(); // Empêche l'envoi traditionnel du formulaire
+
+            // Récupération des valeurs du formulaire
+            const formData = {
+                classe: document.getElementById('classe').value,
+                vendeur: document.getElementById('vendeur').value,
+                client: document.getElementById('client').value,
+                titre: document.getElementById('titre').value,
+                description: document.getElementById('description').value
+            };
+
+            // Insérer les données dans Supabase
+            const { createClient } = supabase
+            const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
+            console.log('Supabase Instance: ', _supabase)
+
+            const { data, error } = await _supabase
+                .from('PROBElhuyar') // Remplacez par le nom de votre table
+                .insert([formData]);
+
+                if (error) throw error;
+
+                // Message de confirmation
+                alert('Le problème a été enregistré avec succès !');
+                
+                // Réinitialisation du formulaire
+                this.reset();
+                
+                // Redirection vers la page d'accueil
+                window.location.href = 'index.html';
+
+        });
+    </script>
+
+</body>
+</html> 
