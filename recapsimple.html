@@ -153,7 +153,7 @@
                     <td>${item.PSANL_quantity}</td>
                     <td>${item.payment_method}</td>
                     <td>${item.cheque_number}</td>
-                    <td>${item.total_amount}</td>
+                    <td>${Number(item.total_amount).toFixed(2)}</td>
                     <td>${item.creation_date}</td>
                 </tr>`;
                 ordersBody.innerHTML += row;
