@@ -153,7 +153,7 @@
             for (const [product, quantity] of Object.entries(totals)) {
                 const row = `<tr>
                     <td>${product}</td>
-                    <td>${quantity}</td>
+                    <td>${product === 'Total' ? Number(quantity).toFixed(2) : quantity}</td>
                 </tr>`;
                 ordersBody.innerHTML += row;
             }
