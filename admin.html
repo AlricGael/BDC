@@ -24,10 +24,10 @@
         }
         .button-section {
             background-color: white;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
         }
         .button-section h2 {
             color: #444;
@@ -38,16 +38,17 @@
         }
         .button-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 15px;
-            margin-bottom: 20px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 25px;
+            margin-bottom: 30px;
+            padding: 10px;
         }
         .admin-button {
             display: block;
             width: 100%;
-            padding: 15px;
+            padding: 20px 15px;
             border: none;
-            border-radius: 5px;
+            border-radius: 8px;
             font-size: 16px;
             font-weight: bold;
             cursor: pointer;
@@ -55,18 +56,28 @@
             text-align: center;
             text-decoration: none;
             color: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
-        .recap-btn { background-color: #007bff; }
-        .recap-btn:hover { background-color: #0056b3; }
+        .recap-btn-1 { background-color: #007bff; }
+        .recap-btn-1:hover { background-color: #0056b3; }
         
-        .error-btn { background-color: #dc3545; }
-        .error-btn:hover { background-color: #c82333; }
+        .recap-btn-2 { background-color: #17a2b8; }
+        .recap-btn-2:hover { background-color: #138496; }
+        
+        .recap-btn-3 { background-color: #6610f2; }
+        .recap-btn-3:hover { background-color: #520dc2; }
         
         .stats-btn { background-color: #28a745; }
         .stats-btn:hover { background-color: #218838; }
         
-        .warning-btn { background-color: #ffc107; color: #000; }
-        .warning-btn:hover { background-color: #e0a800; }
+        .error-btn { background-color: #dc3545; }
+        .error-btn:hover { background-color: #c82333; }
+        
+        .warning-btn-1 { background-color: #fd7e14; color: white; }
+        .warning-btn-1:hover { background-color: #d96b11; }
+        
+        .warning-btn-2 { background-color: #e83e8c; color: white; }
+        .warning-btn-2:hover { background-color: #c21f6a; }
         
         .return-btn {
             position: fixed;
@@ -94,13 +105,13 @@
         <div class="button-section">
             <h2>Récapitulatifs</h2>
             <div class="button-grid">
-                <a href="recap.html" class="admin-button recap-btn">
+                <a href="recap.html" class="admin-button recap-btn-1">
                     Récapitulatif Global
                 </a>
-                <a href="recapsimple.html" class="admin-button recap-btn">
+                <a href="recapsimple.html" class="admin-button recap-btn-2">
                     Récapitulatif Détaillé
                 </a>
-                <a href="recap_orderid.html" class="admin-button recap-btn">
+                <a href="recap_orderid.html" class="admin-button recap-btn-3">
                     Récap par Order ID
                 </a>
             </div>
@@ -121,10 +132,10 @@
                 <a href="erreurs.html" class="admin-button error-btn">
                     Détection des Erreurs
                 </a>
-                <a href="doublons.html" class="admin-button warning-btn">
+                <a href="doublons.html" class="admin-button warning-btn-1">
                     Doublons d'Entrées
                 </a>
-                <a href="doublons_clients.html" class="admin-button warning-btn">
+                <a href="doublons_clients.html" class="admin-button warning-btn-2">
                     Doublons de Clients
                 </a>
             </div>
