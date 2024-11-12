@@ -71,7 +71,9 @@
             <thead>
                 <tr>
                     <th>Order ID</th>
+                    <th>Nb Chèques</th>
                     <th>Total Chèques</th>
+                    <th>Nb Cash</th>
                     <th>Total Cash</th>
                     <th>Total Global</th>
                 </tr>
@@ -82,7 +84,9 @@
             <tfoot>
                 <tr>
                     <td><strong>Total</strong></td>
+                    <td id="totalNbCheques"><strong>0</strong></td>
                     <td id="totalCheques"><strong>0.00</strong></td>
+                    <td id="totalNbCash"><strong>0</strong></td>
                     <td id="totalCash"><strong>0.00</strong></td>
                     <td id="globalTotal"><strong>0.00</strong></td>
                 </tr>
@@ -109,6 +113,8 @@
             const ordersBody = document.getElementById('ordersBody');
             let totalGlobalCheques = 0;
             let totalGlobalCash = 0;
+            let totalNbCheques = 0;
+            let totalNbCash = 0;
 
             // Grouper par order_id
             const orderGroups = {};
@@ -116,35 +122,45 @@
                 if (!orderGroups[item.order_id]) {
                     orderGroups[item.order_id] = {
                         cheques: 0,
-                        cash: 0
+                        cash: 0,
+                        nbCheques: 0,
+                        nbCash: 0
                     };
                 }
                 if (item.cheque_number) {
                     orderGroups[item.order_id].cheques += item.total_amount || 0;
+                    orderGroups[item.order_id].nbCheques++;
                 } else {
                     orderGroups[item.order_id].cash += item.total_amount || 0;
+                    orderGroups[item.order_id].nbCash++;
                 }
             });
 
             // Afficher les données groupées
             Object.entries(orderGroups)
-                .sort(([a], [b]) => Number(a) - Number(b)) // Trier par order_id
+                .sort(([a], [b]) => Number(a) - Number(b))
                 .forEach(([orderId, orderData]) => {
                     const row = document.createElement('tr');
                     const total = orderData.cheques + orderData.cash;
                     row.innerHTML = `
                         <td>${orderId}</td>
+                        <td>${orderData.nbCheques}</td>
                         <td>${Number(orderData.cheques).toFixed(2)}</td>
+                        <td>${orderData.nbCash}</td>
                         <td>${Number(orderData.cash).toFixed(2)}</td>
                         <td>${Number(total).toFixed(2)}</td>
                     `;
                     ordersBody.appendChild(row);
                     totalGlobalCheques += orderData.cheques;
                     totalGlobalCash += orderData.cash;
+                    totalNbCheques += orderData.nbCheques;
+                    totalNbCash += orderData.nbCash;
                 });
 
             // Mettre à jour les totaux
+            document.getElementById('totalNbCheques').textContent = totalNbCheques;
             document.getElementById('totalCheques').textContent = Number(totalGlobalCheques).toFixed(2);
+            document.getElementById('totalNbCash').textContent = totalNbCash;
             document.getElementById('totalCash').textContent = Number(totalGlobalCash).toFixed(2);
             document.getElementById('globalTotal').textContent = Number(totalGlobalCheques + totalGlobalCash).toFixed(2);
         }
