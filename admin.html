@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Administration - BDC Elhuyar</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            color: #333;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        .admin-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .button-section {
+            background-color: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .button-section h2 {
+            color: #444;
+            margin-top: 0;
+            margin-bottom: 15px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #eee;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        .admin-button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            text-decoration: none;
+            color: white;
+        }
+        .recap-btn { background-color: #007bff; }
+        .recap-btn:hover { background-color: #0056b3; }
+        
+        .error-btn { background-color: #dc3545; }
+        .error-btn:hover { background-color: #c82333; }
+        
+        .stats-btn { background-color: #28a745; }
+        .stats-btn:hover { background-color: #218838; }
+        
+        .warning-btn { background-color: #ffc107; color: #000; }
+        .warning-btn:hover { background-color: #e0a800; }
+        
+        .return-btn {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            padding: 10px 20px;
+            background-color: #6c757d;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+        .return-btn:hover {
+            background-color: #5a6268;
+        }
+    </style>
+</head>
+<body>
+    <a href="index.html" class="return-btn">Retour</a>
+
+    <div class="admin-container">
+        <h1>Administration BDC Elhuyar</h1>
+
+        <div class="button-section">
+            <h2>Récapitulatifs</h2>
+            <div class="button-grid">
+                <a href="recap.html" class="admin-button recap-btn">
+                    Récapitulatif Global
+                </a>
+                <a href="recapsimple.html" class="admin-button recap-btn">
+                    Récapitulatif Détaillé
+                </a>
+                <a href="recap_orderid.html" class="admin-button recap-btn">
+                    Récap par Order ID
+                </a>
+            </div>
+        </div>
+
+        <div class="button-section">
+            <h2>Statistiques</h2>
+            <div class="button-grid">
+                <a href="top_vendeurs.html" class="admin-button stats-btn">
+                    Top 10 Vendeurs
+                </a>
+            </div>
+        </div>
+
+        <div class="button-section">
+            <h2>Contrôle et Erreurs</h2>
+            <div class="button-grid">
+                <a href="erreurs.html" class="admin-button error-btn">
+                    Détection des Erreurs
+                </a>
+                <a href="doublons.html" class="admin-button warning-btn">
+                    Doublons d'Entrées
+                </a>
+                <a href="doublons_clients.html" class="admin-button warning-btn">
+                    Doublons de Clients
+                </a>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 

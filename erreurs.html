@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Détection des Erreurs</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            background-color: #f4f4f4;
+        }
+        h1, h2 {
+            color: #333;
+            text-align: center;
+        }
+        .error-section {
+            margin: 20px auto;
+            max-width: 1200px;
+        }
+        .error-type {
+            background-color: #dc3545;
+            color: white;
+            padding: 10px;
+            margin-top: 30px;
+            border-radius: 5px;
+        }
+        .table-container {
+            overflow-x: auto;
+            margin: 10px 0;
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #f8f8f8;
+            font-weight: bold;
+            color: #333;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+        .error-row {
+            background-color: #ffe6e6;
+        }
+        .no-errors {
+            text-align: center;
+            padding: 20px;
+            color: #28a745;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <a href="admin.html" style="position: absolute; top: 20px; left: 20px; text-decoration: none;">
+        <button style="padding: 5px 10px; font-size: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
+            Retour
+        </button>
+    </a>
+
+    <button onclick="location.reload();" style="position: absolute; top: 20px; left: 100px; padding: 5px 10px; font-size: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
+        Rafraîchir
+    </button>
+
+    <h1>Détection des Erreurs Potentielles</h1>
+    
+    <div id="errorContainer" class="error-section">
+        <!-- Les sections d'erreurs seront insérées ici -->
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        const { createClient } = supabase;
+        const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs');
+
+        async function loadData() {
+            const { data, error } = await _supabase
+                .from('BDCElhuyar')
+                .select('*')
+                .order('order_id', { ascending: true });
+
+            if (error) {
+                console.error('Erreur lors du chargement des données:', error);
+                return;
+            }
+
+            const errorContainer = document.getElementById('errorContainer');
+            let hasErrors = false;
+
+            // 1. Numéros de chèques en doublon
+            const chequeGroups = data.reduce((acc, current) => {
+                if (current.cheque_number) {
+                    if (!acc[current.cheque_number]) {
+                        acc[current.cheque_number] = [];
+                    }
+                    acc[current.cheque_number].push(current);
+                }
+                return acc;
+            }, {});
+
+            const duplicateCheques = Object.entries(chequeGroups)
+                .filter(([_, entries]) => entries.length > 1);
+
+            if (duplicateCheques.length > 0) {
+                hasErrors = true;
+                const section = createErrorSection("Numéros de Chèques en Doublon");
+                duplicateCheques.forEach(([chequeNumber, entries]) => {
+                    const table = createTable(entries, `Chèque N° ${chequeNumber} (${entries.length} entrées)`);
+                    section.appendChild(table);
+                });
+                errorContainer.appendChild(section);
+            }
+
+            // 2. Montants nuls ou négatifs
+            const invalidAmounts = data.filter(item => 
+                item.total_amount <= 0 || isNaN(item.total_amount)
+            );
+
+            if (invalidAmounts.length > 0) {
+                hasErrors = true;
+                const section = createErrorSection("Montants Invalides (nuls ou négatifs)");
+                section.appendChild(createTable(invalidAmounts));
+                errorContainer.appendChild(section);
+            }
+
+            // 3. Mêmes données sur une courte période
+            const similarEntries = data.reduce((acc, current, index, array) => {
+                const similar = array.filter((item, idx) => 
+                    idx !== index && 
+                    item.total_amount === current.total_amount &&
+                    item.client_name === current.client_name &&
+                    Math.abs(new Date(item.creation_date) - new Date(current.creation_date)) < 86400000 // 24 heures
+                );
+                if (similar.length > 0) {
+                    acc.push([current, ...similar]);
+                }
+                return acc;
+            }, []);
+
+            if (similarEntries.length > 0) {
+                hasErrors = true;
+                const section = createErrorSection("Entrées Similaires sur 24h");
+                similarEntries.forEach(entries => {
+                    const table = createTable(entries, `${entries.length} entrées similaires`);
+                    section.appendChild(table);
+                });
+                errorContainer.appendChild(section);
+            }
+
+            // 4. Numéros de chèque suspects (trop courts ou non numériques)
+            const suspiciousCheques = data.filter(item => 
+                item.cheque_number && 
+                (item.cheque_number.length < 4 || !/^\d+$/.test(item.cheque_number))
+            );
+
+            if (suspiciousCheques.length > 0) {
+                hasErrors = true;
+                const section = createErrorSection("Numéros de Chèque Suspects");
+                section.appendChild(createTable(suspiciousCheques));
+                errorContainer.appendChild(section);
+            }
+
+            // 5. Montants identiques pour le même client le même jour
+            const clientDayAmounts = data.reduce((acc, current) => {
+                const key = `${current.client_name}_${current.creation_date}_${current.total_amount}`;
+                if (!acc[key]) {
+                    acc[key] = [];
+                }
+                acc[key].push(current);
+                return acc;
+            }, {});
+
+            const duplicateAmounts = Object.entries(clientDayAmounts)
+                .filter(([_, entries]) => entries.length > 1);
+
+            if (duplicateAmounts.length > 0) {
+                hasErrors = true;
+                const section = createErrorSection("Montants Identiques (même client, même jour)");
+                duplicateAmounts.forEach(([_, entries]) => {
+                    const table = createTable(entries, 
+                        `Client: ${entries[0].client_name}, Montant: ${entries[0].total_amount}€`);
+                    section.appendChild(table);
+                });
+                errorContainer.appendChild(section);
+            }
+
+            // 6. Noms de clients similaires (possible faute de frappe)
+            const similarClients = findSimilarNames(data.map(item => item.client_name));
+            if (Object.keys(similarClients).length > 0) {
+                hasErrors = true;
+                const section = createErrorSection("Noms de Clients Similaires");
+                Object.entries(similarClients).forEach(([name, similar]) => {
+                    const entries = data.filter(item => 
+                        [name, ...similar].includes(item.client_name)
+                    );
+                    const table = createTable(entries, 
+                        `Noms similaires: ${[name, ...similar].join(', ')}`);
+                    section.appendChild(table);
+                });
+                errorContainer.appendChild(section);
+            }
+
+            if (!hasErrors) {
+                errorContainer.innerHTML = `
+                    <div class="no-errors">
+                        Aucune erreur potentielle détectée
+                    </div>`;
+            }
+        }
+
+        // Fonction pour trouver les noms similaires
+        function findSimilarNames(names) {
+            const similarNames = {};
+            names.forEach((name1, i) => {
+                names.slice(i + 1).forEach(name2 => {
+                    if (areNamesSimilar(name1, name2)) {
+                        if (!similarNames[name1]) {
+                            similarNames[name1] = new Set();
+                        }
+                        similarNames[name1].add(name2);
+                    }
+                });
+            });
+            return Object.fromEntries(
+                Object.entries(similarNames)
+                    .map(([key, value]) => [key, Array.from(value)])
+            );
+        }
+
+        // Fonction pour comparer la similarité des noms
+        function areNamesSimilar(name1, name2) {
+            if (name1 === name2) return false;
+            
+            const n1 = name1.toLowerCase();
+            const n2 = name2.toLowerCase();
+            
+            // Distance de Levenshtein simplifiée
+            if (Math.abs(n1.length - n2.length) > 2) return false;
+            
+            let diff = 0;
+            for (let i = 0; i < Math.min(n1.length, n2.length); i++) {
+                if (n1[i] !== n2[i]) diff++;
+            }
+            diff += Math.abs(n1.length - n2.length);
+            
+            return diff <= 2;
+        }
+
+        function createErrorSection(title) {
+            const section = document.createElement('div');
+            section.innerHTML = `<h2 class="error-type">${title}</h2>`;
+            return section;
+        }
+
+        function createTable(data, subtitle = '') {
+            const container = document.createElement('div');
+            container.className = 'table-container';
+            
+            if (subtitle) {
+                const subtitleDiv = document.createElement('div');
+                subtitleDiv.style.padding = '10px';
+                subtitleDiv.style.backgroundColor = '#f8f8f8';
+                subtitleDiv.style.fontWeight = 'bold';
+                subtitleDiv.textContent = subtitle;
+                container.appendChild(subtitleDiv);
+            }
+
+            const table = document.createElement('table');
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Order ID</th>
+                        <th>Vendeur</th>
+                        <th>Client</th>
+                        <th>Montant</th>
+                        <th>N° Chèque</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.map(item => `
+                        <tr class="error-row">
+                            <td>${item.id}</td>
+                            <td>${item.order_id}</td>
+                            <td>${item.vendor_name}</td>
+                            <td>${item.client_name}</td>
+                            <td>${Number(item.total_amount).toFixed(2)}</td>
+                            <td>${item.cheque_number || 'Cash'}</td>
+                            <td>${item.creation_date}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            container.appendChild(table);
+            return container;
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            loadData();
+        });
+    </script>
+</body>
+</html> 
