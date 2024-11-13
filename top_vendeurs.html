@@ -50,6 +50,32 @@
         .medal-1 { color: gold; }
         .medal-2 { color: silver; }
         .medal-3 { color: #cd7f32; }
+        
+        /* Ajouter les styles pour les boutons de tri */
+        .sort-buttons {
+            text-align: center;
+            margin: 20px 0;
+        }
+        .sort-button {
+            padding: 10px 20px;
+            margin: 0 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+        .sort-button.active {
+            background-color: #4CAF50;
+            color: white;
+        }
+        .sort-button:not(.active) {
+            background-color: #f0f0f0;
+            color: #333;
+        }
+        .sort-button:hover:not(.active) {
+            background-color: #e0e0e0;
+        }
     </style>
 </head>
 <body>
@@ -65,6 +91,16 @@
 
     <h1>Top 10 des Vendeurs</h1>
     
+    <!-- Ajouter les boutons de tri -->
+    <div class="sort-buttons">
+        <button id="sortBySales" class="sort-button active" onclick="sortData('sales')">
+            Trier par nombre de ventes
+        </button>
+        <button id="sortByRevenue" class="sort-button" onclick="sortData('revenue')">
+            Trier par chiffre d'affaires
+        </button>
+    </div>
+
     <div class="table-container">
         <table>
             <thead>
@@ -85,6 +121,8 @@
     <script>
         const { createClient } = supabase;
         const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs');
+
+        let vendorsData = []; // Variable globale pour stocker les données
 
         async function loadData() {
             const { data, error } = await _supabase
@@ -109,19 +147,31 @@
                 vendorStats[item.vendor_name].revenue += item.total_amount || 0;
             });
 
-            // Convertir en tableau et trier par chiffre d'affaires
-            const sortedVendors = Object.entries(vendorStats)
+            // Convertir en tableau
+            vendorsData = Object.entries(vendorStats)
                 .map(([name, stats]) => ({
                     name,
                     sales: stats.sales,
                     revenue: stats.revenue
-                }))
-                .sort((a, b) => b.revenue - a.revenue)
-                .slice(0, 10); // Garder seulement les 10 premiers
+                }));
+
+            // Tri initial par nombre de ventes
+            sortData('sales');
+        }
+
+        function sortData(criterion) {
+            // Mettre à jour l'apparence des boutons
+            document.getElementById('sortBySales').classList.toggle('active', criterion === 'sales');
+            document.getElementById('sortByRevenue').classList.toggle('active', criterion === 'revenue');
+
+            // Trier les données
+            const sortedVendors = [...vendorsData]
+                .sort((a, b) => b[criterion] - a[criterion])
+                .slice(0, 10);
 
             // Afficher les résultats
             const vendorsBody = document.getElementById('vendorsBody');
-            vendorsBody.innerHTML = ''; // Vider le tableau avant d'ajouter les nouvelles données
+            vendorsBody.innerHTML = '';
             
             sortedVendors.forEach((vendor, index) => {
                 const row = document.createElement('tr');
