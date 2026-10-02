@@ -4,99 +4,26 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Top 10 des Vendeurs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .table-container {
-            max-width: 800px;
-            margin: 20px auto;
-            overflow-x: auto;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            background-color: white;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-        th, td {
-            padding: 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #4CAF50;
-            color: white;
-            font-weight: bold;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        .rank {
-            font-weight: bold;
-            color: #4CAF50;
-        }
-        .medal-1 { color: gold; }
-        .medal-2 { color: silver; }
-        .medal-3 { color: #cd7f32; }
-        
-        /* Ajouter les styles pour les boutons de tri */
-        .sort-buttons {
-            text-align: center;
-            margin: 20px 0;
-        }
-        .sort-button {
-            padding: 10px 20px;
-            margin: 0 10px;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            font-weight: bold;
-            transition: all 0.3s ease;
-        }
-        .sort-button.active {
-            background-color: #4CAF50;
-            color: white;
-        }
-        .sort-button:not(.active) {
-            background-color: #f0f0f0;
-            color: #333;
-        }
-        .sort-button:hover:not(.active) {
-            background-color: #e0e0e0;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <a href="admin.html" style="position: absolute; top: 20px; left: 20px; text-decoration: none;">
-        <button style="padding: 5px 10px; font-size: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Retour
-        </button>
-    </a>
+    <header class="topbar">
+        <a href="admin.html" class="btn">← Retour</a>
+        <h1>Top 10 des Vendeurs</h1>
+        <button type="button" class="btn" onclick="location.reload();">↻ Rafraîchir</button>
+    </header>
 
-    <button onclick="location.reload();" style="position: absolute; top: 20px; left: 100px; padding: 5px 10px; font-size: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        Rafraîchir
-    </button>
-
-    <h1>Top 10 des Vendeurs</h1>
+    <main class="page page-wide">
     
     <!-- Ajouter les boutons de tri -->
-    <div class="sort-buttons">
-        <button id="sortBySales" class="sort-button active" onclick="sortData('sales')">
+    <div class="toolbar">
+        <button id="sortBySales" class="btn active" onclick="sortData('sales')">
             Trier par nombre de ventes
         </button>
-        <button id="sortByRevenue" class="sort-button" onclick="sortData('revenue')">
+        <button id="sortByRevenue" class="btn" onclick="sortData('revenue')">
             Trier par chiffre d'affaires
         </button>
     </div>
@@ -116,6 +43,8 @@
             </tbody>
         </table>
     </div>
+    </main>
+
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -177,7 +106,7 @@
                 const row = document.createElement('tr');
                 const rankClass = index < 3 ? `medal-${index + 1}` : '';
                 row.innerHTML = `
-                    <td class="rank ${rankClass}">${index + 1}</td>
+                    <td class="rank ${rankClass}"><span>${index + 1}</span></td>
                     <td>${vendor.name}</td>
                     <td>${vendor.sales}</td>
                     <td>${Number(vendor.revenue).toFixed(2)} €</td>

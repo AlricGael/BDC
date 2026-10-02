@@ -4,593 +4,343 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Bon de Commande Partenariat Noël 2025</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="styles.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-            background-color: #f8f9fa;
-            color: #343a40;
-            margin: 0;
-            padding: 0;
-        }
-        .container {
-            max-width: 800px;
-            margin: 20px auto;
-            padding: 20px;
-            background-color: #ffffff;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-        }
-        h1, h2, h3 {
-            color: #007bff;
-        }
-        label {
-            display: block;
-            margin-top: 10px;
-            font-weight: bold;
-            text-align: left;
-        }
-        input[type="text"], input[type="number"], select {
-            width: 100%;
-            padding: 8px;
-            margin-top: 5px;
-            margin-bottom: 15px;
-            border: 1px solid #ced4da;
-            border-radius: 4px;
-            box-sizing: border-box;
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            margin-bottom: 20px;
-        }
-        th, td {
-            padding: 10px;
-            border: 1px solid #dee2e6;
-            text-align: center;
-        }
-        th {
-            background-color: #007bff;
-            color: #ffffff;
-        }
-        .product-total {
-            text-align: right;
-        }
-        .order-summary {
-            margin-top: 20px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 4px;
-        }
-        button {
-            display: block;
-            width: 100%;
-            padding: 10px;
-            background-color: #007bff;
-            color: #ffffff;
-            border: none;
-            border-radius: 4px;
-            font-size: 16px;
-            cursor: pointer;
-        }
-        button:hover {
-            background-color: #0056b3;
-        }
-    </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Bon de Commande - Partenariat Noël 2025</h1>
+    <main class="page">
+        <header class="hero">
+            <span class="eyebrow">Partenariat Noël 2025</span>
+            <h1>Bon de commande</h1>
+            <p>Saisissez les informations puis les quantités de chaque article.</p>
+        </header>
+
         <form id="order-form">
-            <div class="client-info">
-                <label for="reseller-class">Classe du Revendeur:</label>
-                <select id="reseller-class" name="reseller-class" required>
-                    <option value="">Sélectionner la classe</option>
-                    <option value="6">6</option>
-                    <option value="5">5</option>
-                    <option value="4">4</option>
-                    <option value="3">3</option>
-                </select>
-
-                <label for="class-number">Numeros de classe</label>
-                <select id="class-number" name="class-number" required>
-                    <option value="">Sélectionner la classe</option>
-                    <option value="1">1</option>
-                    <option value="2">2</option>
-                    <option value="3">3</option>
-                    <option value="4">4</option>
-                    <option value="5">5</option>
-                </select>
-                
-                <div class="form-group">
-                    <label for="client_name">Nom Prénom du client</label>
-                    <input type="text" id="client_name" name="client_name" required>
+            <section class="card">
+                <h2>Informations</h2>
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="reseller-class">Niveau du revendeur</label>
+                        <select id="reseller-class" name="reseller-class" required>
+                            <option value="">Choisir…</option>
+                            <option value="6">6e</option>
+                            <option value="5">5e</option>
+                            <option value="4">4e</option>
+                            <option value="3">3e</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="class-number">Numéro de classe</label>
+                        <select id="class-number" name="class-number" required>
+                            <option value="">Choisir…</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4">4</option>
+                            <option value="5">5</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="vendor_name">Nom Prénom du vendeur</label>
+                        <input type="text" id="vendor_name" name="vendor_name" autocomplete="off" required>
+                    </div>
+                    <div class="field">
+                        <label for="client_name">Nom Prénom du client</label>
+                        <input type="text" id="client_name" name="client_name" autocomplete="off" required>
+                    </div>
                 </div>
+            </section>
 
-                <div class="form-group">
-                    <label for="vendor_name">Nom Prénom du vendeur</label>
-                    <input type="text" id="vendor_name" name="vendor_name" required>
-                </div>
-            </div>
-
-            <h2>Articles à commander</h2>
-            <h3>Spécialités</h3>
-            <table>
-                <thead>
-                    <tr>
-                        <th>Article</th>
-                        <th>Poids</th>
-                        <th>Prix Unitaire</th>
-                        <th>Quantité</th>
-                        <th>Total</th>
-                    </tr>
-                </thead>
+            <section class="card category">
                 <h2>Spécialités</h2>
-<table>
-    <tr>
-        <td>Praliné Croquant - Lait</td>
-        <td>210g</td>
-        <td>16,70€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="16.70" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Ganache au Piment d'Espelette - Noir</td>
-        <td>170g</td>
-        <td>14,70€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="14.70" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Ganache Nature Chocolat - Noir</td>
-        <td>110g</td>
-        <td>8,60€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="8.60" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Ganache à la Pulpe de Cerises Noires - Noir</td>
-        <td>110g</td>
-        <td>8,60€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="8.60" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Ganache Caramel au Sel de Salies de Béarn - Lait</td>
-        <td>210g</td>
-        <td>16,70€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="16.70" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-</table>
-
-<h2>Tablettes Inspiration Terroir</h2>
-<table>
-    <tr>
-        <td>Tablette Lait Caramel Sel de Salies de Béarn</td>
-        <td>80g</td>
-        <td>5,80€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="5.80" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Tablette Noir Piment</td>
-        <td>80g</td>
-        <td>5,80€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="5.80" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Tablette Noir Cerise</td>
-        <td>80g</td>
-        <td>5,80€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="5.80" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Tablette Ambrée - Blanc</td>
-        <td>80g</td>
-        <td>5,80€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="5.80" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-</table>
-
-<h2>Gourmandises à Grignoter</h2>
-<table>
-    <tr>
-        <td>Céréale Croustillante Chocolat - Lait</td>
-        <td>110g</td>
-        <td>7,85€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="7.85" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Céréale Croustillante Chocolat Lait Caramel</td>
-        <td>110g</td>
-        <td>7,85€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="7.85" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Céréale Croustillante Chocolat - Noir</td>
-        <td>110g</td>
-        <td>7,85€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="7.85" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Mendiant Noir Fruits Secs</td>
-        <td>110g</td>
-        <td>8,90€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="8.90" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Mendiant Lait Fruits Secs</td>
-        <td>110g</td>
-        <td>8,90€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="8.90" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Noisettes Lait Poudre de Cacao</td>
-        <td>110g</td>
-        <td>8,20€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="8.20" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Amandes Noir Poudre de Cacao</td>
-        <td>110g</td>
-        <td>8,20€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="8.20" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Pâte de Fruits - Pomme Framboise</td>
-        <td>250g</td>
-        <td>9,95€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="9.95" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Orangette enrobée Chocolat - Noir</td>
-        <td>130g</td>
-        <td>11,75€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="11.75" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-</table>
-
-<h2>Assortiments de Bonbons de Chocolats</h2>
-<table>
-    <tr>
-        <td>Ballotin Festif - 24 Ganaches, Pralines, Pâtes d'Amandes - Noir et Lait</td>
-        <td>230g</td>
-        <td>17,60€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="17.60" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Ballotin Festif - 24 Ganaches, Pralines, Pâtes d'Amandes - Noir</td>
-        <td>230g</td>
-        <td>17,60€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="17.60" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Boîte Cadeau - 54 Ganaches, Pralines, Pâtes d'Amandes - Noir et Lait</td>
-        <td>530g</td>
-        <td>41,90€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="41.90" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-</table>
-
-<h2>Chocolats de Noël</h2>
-<table>
-    <tr>
-        <td>Praliné Mais - NOIR (nouveau)</td>
-        <td>110g</td>
-        <td>8,60€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="8.60" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Truffe au Rhum</td>
-        <td>110g</td>
-        <td>8,60€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="8.60" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-</table>
-
-<h2>Le Coin des Enfants</h2>
-<table>
-    <tr>
-        <td>Moulage Renne et sa Garniture (nouveau)</td>
-        <td>180g</td>
-        <td>11,50€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="11.50" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-    <tr>
-        <td>Mini Tablette Noël et sa Garniture</td>
-        <td>110g</td>
-        <td>6,95€</td>
-        <td>
-            <input type="number" name="quantity" min="0" data-price="6.95" class="quantity" value="0">
-        </td>
-        <td class="product-total">0,00€</td>
-    </tr>
-</table>
-
-
-            <div class="order-summary">
-                <div class="total-products">
-                    <h3>Total des Produits :</h3>
-                    <span id="total-produits">0 produits</span>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Praliné Croquant – Lait</div><div class="product-meta">210 g · 16,70 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="BCCOL" data-price="16.70" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
                 </div>
-
-                <label for="payment-method">Mode de paiement:</label>
-                <select id="payment-method" name="payment-method" required>
-                    <option value="cash">Espèces</option>
-                    <option value="cheque">Chèque</option>
-                </select>
-
-                <div id="cheque-number-container" style="display: none; margin-top: 10px;">
-                    <label for="cheque-number">Numéro de Chèque :</label>
-                    <input type="text" id="cheque-number" name="cheque-number" placeholder="Entrez le numéro de chèque">
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Ganache au Piment d'Espelette – Noir</div><div class="product-meta">170 g · 14,70 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="EGPN170" data-price="14.70" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
                 </div>
-
-                <div class="total-amount">
-                    <h3>Total Commande:</h3>
-                    <span id="total-commande">0,00€</span>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Ganache Nature Chocolat – Noir</div><div class="product-meta">110 g · 8,60 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PGNA110" data-price="8.60" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
                 </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Ganache à la Pulpe de Cerises Noires – Noir</div><div class="product-meta">110 g · 8,60 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PGCN110" data-price="8.60" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Ganache Caramel au Sel de Salies de Béarn – Lait</div><div class="product-meta">210 g · 16,70 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="BCGCS" data-price="16.70" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+            </section>
+
+            <section class="card category">
+                <h2>Tablettes Inspiration Terroir</h2>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Tablette Lait Caramel Sel de Salies de Béarn</div><div class="product-meta">80 g · 5,80 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="TLCS80A" data-price="5.80" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Tablette Noir Piment</div><div class="product-meta">80 g · 5,80 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="TNP80" data-price="5.80" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Tablette Noir Cerise</div><div class="product-meta">80 g · 5,80 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="TNCERT80A" data-price="5.80" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Tablette Ambrée – Blanc</div><div class="product-meta">80 g · 5,80 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="TBA80" data-price="5.80" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+            </section>
+
+            <section class="card category">
+                <h2>Gourmandises à Grignoter</h2>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Céréale Croustillante Chocolat – Lait</div><div class="product-meta">110 g · 7,85 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PCL110" data-price="7.85" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Céréale Croustillante Chocolat Lait Caramel</div><div class="product-meta">110 g · 7,85 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PCLC110" data-price="7.85" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Céréale Croustillante Chocolat – Noir</div><div class="product-meta">110 g · 7,85 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PCN110" data-price="7.85" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Mendiant Noir Fruits Secs</div><div class="product-meta">110 g · 8,90 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PVMN110" data-price="8.90" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Mendiant Lait Fruits Secs</div><div class="product-meta">110 g · 8,90 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PVML110" data-price="8.90" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Noisettes Lait Poudre de Cacao</div><div class="product-meta">110 g · 8,20 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PNLC110" data-price="8.20" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Amandes Noir Poudre de Cacao</div><div class="product-meta">110 g · 8,20 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PANC110" data-price="8.20" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Pâte de Fruits – Pomme Framboise</div><div class="product-meta">250 g · 9,95 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="ETPOF" data-price="9.95" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Orangette enrobée Chocolat – Noir</div><div class="product-meta">130 g · 11,75 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PON130" data-price="11.75" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+            </section>
+
+            <section class="card category">
+                <h2>Assortiments de Bonbons de Chocolat</h2>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Ballotin Festif – 24 Ganaches, Pralinés, Pâtes d'Amandes – Noir et Lait</div><div class="product-meta">230 g · 17,60 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="BACM230F" data-price="17.60" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Ballotin Festif – 24 Ganaches, Pralinés, Pâtes d'Amandes – Noir</div><div class="product-meta">230 g · 17,60 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="BACN230F" data-price="17.60" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Boîte Cadeau – 54 Ganaches, Pralinés, Pâtes d'Amandes – Noir et Lait</div><div class="product-meta">530 g · 41,90 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="BCACM540" data-price="41.90" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+            </section>
+
+            <section class="card category">
+                <h2>Chocolats de Noël</h2>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Praliné Maïs – Noir <span class="badge">Nouveau</span></div><div class="product-meta">110 g · 8,60 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PGNN" data-price="8.60" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Truffe au Rhum</div><div class="product-meta">110 g · 8,60 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PT110" data-price="8.60" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+            </section>
+
+            <section class="card category">
+                <h2>Le Coin des Enfants</h2>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Moulage Renne et sa Garniture <span class="badge">Nouveau</span></div><div class="product-meta">180 g · 11,50 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PSANP3" data-price="11.50" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+                <div class="product">
+                    <div class="product-info"><div class="product-name">Mini Tablette Noël et sa Garniture</div><div class="product-meta">110 g · 6,95 €</div></div>
+                    <div class="stepper"><button type="button" data-step="-1" aria-label="Retirer">−</button><input type="number" class="quantity" data-col="PSANL" data-price="6.95" min="0" value="0" inputmode="numeric"><button type="button" data-step="1" aria-label="Ajouter">+</button></div>
+                    <div class="product-total">0,00 €</div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2>Paiement</h2>
+                <div class="segmented">
+                    <label><input type="radio" name="payment-method" value="cash" checked><span>Espèces</span></label>
+                    <label><input type="radio" name="payment-method" value="cheque"><span>Chèque</span></label>
+                </div>
+                <div id="cheque-number-container" class="field" style="display: none; margin: 14px 0 0;">
+                    <label for="cheque-number">Numéro de chèque</label>
+                    <input type="text" id="cheque-number" name="cheque-number" inputmode="numeric" placeholder="Ex. 1234567">
+                </div>
+            </section>
+
+            <div class="checkout">
+                <div class="checkout-info">
+                    <div class="checkout-count" id="total-produits">0 article</div>
+                    <div class="checkout-total" id="total-commande">0,00 €</div>
+                </div>
+                <button type="submit" class="btn btn-lg">Valider</button>
             </div>
-
-            <button type="submit" class="submit-button">Valider</button>
-
-            
-
-            <!-- Bouton Admin -->
-            <div style="margin-top: 20px;">
-                <button type="button" 
-                        onclick="window.location.href='admin.html'" 
-                        style="
-                            width: 100%;
-                            background-color: #6c757d;
-                            color: white;
-                            padding: 12px;
-                            border: none;
-                            border-radius: 4px;
-                            font-weight: bold;
-                            cursor: pointer;
-                            margin-bottom: 10px;
-                        ">
-                    Administration
-                </button>
-            </div>
-
-      
         </form>
-    <footer style="text-align: center; margin-top: 20px; padding: 10px; font-size: 14px; color: #6c757d;">
-    Tous droits réservés ALRIC Gaël
-    </footer>
-    </div>    
+
+        <footer class="footer">
+            <a href="admin.html">Administration</a><br>
+            Tous droits réservés ALRIC Gaël
+        </footer>
+    </main>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-    const form = document.getElementById('order-form');
-    const quantities = form.querySelectorAll('.quantity');
-    const totalProduitsElement = document.getElementById('total-produits');
-    const totalCommandeElement = document.getElementById('total-commande');
-    let totalprix = 0;
+    document.addEventListener('DOMContentLoaded', function() {
+        const form = document.getElementById('order-form');
+        const quantities = form.querySelectorAll('.quantity');
+        const totalProduitsElement = document.getElementById('total-produits');
+        const totalCommandeElement = document.getElementById('total-commande');
+        const chequeNumberContainer = document.getElementById('cheque-number-container');
+        const chequeNumberInput = document.getElementById('cheque-number');
+        const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
+        let totalprix = 0;
 
-    // Fonction pour mettre à jour les totaux
-    function updateTotals() {
-        let totalProduits = 0;
-        let totalCommande = 0;
+        const getPaymentMethod = () => form.querySelector('input[name="payment-method"]:checked').value;
 
-        quantities.forEach(quantity => {
-            const price = parseFloat(quantity.dataset.price); // Récupère le prix unitaire
-            const qty = parseInt(quantity.value) || 0; // Récupère la quantité
+        // Met à jour les totaux par ligne et le total général
+        function updateTotals() {
+            let totalProduits = 0;
+            let totalCommande = 0;
 
-            totalProduits += qty; // Compte le nombre total de produits
-            totalCommande += qty * price; // Calcule le total de la commande
+            quantities.forEach(quantity => {
+                const price = parseFloat(quantity.dataset.price);
+                const qty = parseInt(quantity.value) || 0;
 
-            const row = quantity.closest('tr'); // Trouve la ligne correspondante
-            const productTotalElement = row.querySelector('.product-total'); // Trouve la cellule de total
-            productTotalElement.textContent = (qty * price).toFixed(2) + '€'; // Met à jour le total du produit
+                totalProduits += qty;
+                totalCommande += qty * price;
+
+                const row = quantity.closest('.product');
+                row.querySelector('.product-total').textContent = euros.format(qty * price);
+                row.classList.toggle('has-qty', qty > 0);
+            });
+
+            totalprix = Math.round(totalCommande * 100) / 100;
+            totalProduitsElement.textContent = totalProduits + (totalProduits > 1 ? ' articles' : ' article');
+            totalCommandeElement.textContent = euros.format(totalprix);
+        }
+
+        // Affiche le champ numéro de chèque uniquement pour un paiement par chèque
+        function toggleChequeNumber() {
+            const isCheque = getPaymentMethod() === 'cheque';
+            chequeNumberContainer.style.display = isCheque ? 'block' : 'none';
+            chequeNumberInput.required = isCheque;
+        }
+
+        // Boutons − / +
+        form.addEventListener('click', event => {
+            const button = event.target.closest('[data-step]');
+            if (!button) return;
+            const input = button.parentElement.querySelector('.quantity');
+            input.value = Math.max(0, (parseInt(input.value) || 0) + Number(button.dataset.step));
+            updateTotals();
         });
 
-        totalProduitsElement.textContent = totalProduits + ' produits'; // Met à jour le total des produits
-        totalprix = totalCommande
-        totalCommandeElement.textContent = totalCommande.toFixed(2) + '€'; // Met à jour le total de la commande
+        quantities.forEach(quantity => quantity.addEventListener('input', updateTotals));
+        form.querySelectorAll('input[name="payment-method"]').forEach(radio => radio.addEventListener('change', toggleChequeNumber));
 
-    }
+        updateTotals();
+        toggleChequeNumber();
 
-    // Ajoute un événement d'écoute pour chaque champ de quantité
-    quantities.forEach(quantity => {
-        quantity.addEventListener('input', updateTotals); // Appelle updateTotals à chaque changement
-    });
+        form.addEventListener('submit', async (event) => {
+            event.preventDefault();
 
-    // Appelle updateTotals pour initialiser les totaux au chargement
-    updateTotals();
+            const vendorName = document.getElementById('vendor_name').value.toUpperCase();
+            const clientName = document.getElementById('client_name').value.toUpperCase();
+            const paymentMethod = getPaymentMethod();
+            const Niveau = document.getElementById('reseller-class').value;
+            const classe = document.getElementById('class-number').value;
+            const orderid = Niveau + classe;
+            const chequeNumber = paymentMethod === 'cheque' ? chequeNumberInput.value : null;
+            const totalAmount = totalprix;
 
-    // Gestionnaire d'événements pour le formulaire
-    form.addEventListener('submit', async (event) => {
-        event.preventDefault(); // Empêche le rechargement de la page
+            const userConfirmed = confirm(`Le montant total est de ${euros.format(totalAmount)}. Voulez-vous continuer ?`);
+            if (!userConfirmed) return;
 
-        // Récupération des valeurs du formulaire
-        const vendorName = document.getElementById('vendor_name').value.toUpperCase();
-        const clientName = document.getElementById('client_name').value.toUpperCase();
-        const paymentMethod = document.getElementById('payment-method').value;
-        const Niveau = document.getElementById('reseller-class').value;
-        const classe = document.getElementById('class-number').value;
-        const orderid = Niveau + classe;
-        const chequeNumber = paymentMethod === 'cheque' ? document.getElementById('cheque-number').value : null;
-        const totalAmount = totalprix;
+            const orderData = {
+                order_id: orderid,
+                vendor_name: vendorName,
+                client_name: clientName,
+                payment_method: paymentMethod,
+                cheque_number: chequeNumber,
+                total_amount: totalAmount,
+            };
+            quantities.forEach(quantity => {
+                orderData[quantity.dataset.col + '_quantity'] = parseInt(quantity.value) || 0;
+            });
 
-         // Afficher une fenêtre de confirmation avec le montant total
-        const confirmationMessage = `Le montant total est de ${totalAmount.toFixed(2)}€. Voulez-vous continuer ?`;
-        const userConfirmed = confirm(confirmationMessage);
+            const { createClient } = supabase;
+            const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs');
 
-        if (!userConfirmed) {
-            return; // Ne pas envoyer la requête si l'utilisateur annule
-        }
-        // Préparer les données à insérer
-        const orderData = {
-            order_id: orderid,
-            vendor_name: vendorName,
-            client_name: clientName,
-            payment_method: paymentMethod,
-            cheque_number: chequeNumber,
-            total_amount: totalAmount,
-            BCCOL_quantity: parseInt(quantities[0].value),
-            EGPN170_quantity: parseInt(quantities[1].value),
-            PGNA110_quantity: parseInt(quantities[2].value),
-            PGCN110_quantity: parseInt(quantities[3].value),
-            BCGCS_quantity: parseInt(quantities[4].value),
-            TLCS80A_quantity: parseInt(quantities[5].value),
-            TNP80_quantity: parseInt(quantities[6].value),
-            TNCERT80A_quantity: parseInt(quantities[7].value),
-            TBA80_quantity: parseInt(quantities[8].value),
-            PCL110_quantity: parseInt(quantities[9].value),
-            PCLC110_quantity: parseInt(quantities[10].value),
-            PCN110_quantity: parseInt(quantities[11].value),
-            PVMN110_quantity: parseInt(quantities[12].value),
-            PVML110_quantity: parseInt(quantities[13].value),
-            PNLC110_quantity: parseInt(quantities[14].value),
-            PANC110_quantity: parseInt(quantities[15].value),
-            ETPOF_quantity: parseInt(quantities[16].value),
-            PON130_quantity: parseInt(quantities[17].value),
-            BACM230F_quantity: parseInt(quantities[18].value),
-            BACN230F_quantity: parseInt(quantities[19].value),
-            BCACM540_quantity: parseInt(quantities[20].value),
-            PGNN_quantity: parseInt(quantities[21].value),
-            PT110_quantity: parseInt(quantities[22].value),
-            PSANP3_quantity: parseInt(quantities[23].value),
-            PSANL_quantity: parseInt(quantities[24].value),
-    
+            const { error } = await _supabase
+                .from('BDCElhuyar')
+                .insert([orderData]);
 
+            if (error) {
+                console.error('Erreur lors de l\'insertion:', error);
+                alert('Erreur lors de l\'enregistrement des données.');
+                return;
+            }
 
-        };
-
-        // Insérer les données dans Supabase
-        const { createClient } = supabase
-        const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
-
-        const { data, error } = await _supabase
-            .from('BDCElhuyar') // Remplacez par le nom de votre table
-            .insert([orderData]);
-
-        if (error) {
-            console.error('Erreur lors de l\'insertion:', error);
-            alert('Erreur lors de l\'enregistrement des données.');
-        } else {
             alert('Données enregistrées avec succès !');
 
-            // Demander à l'utilisateur s'il souhaite garder le nom du vendeur et sa classe
             const keepVendorInfo = confirm("Souhaitez-vous garder le nom du vendeur et sa classe ?");
-            
-            if (!keepVendorInfo) {
-                // Réinitialiser les champs si l'utilisateur ne souhaite pas garder les informations
-                document.getElementById('vendor_name').value = '';
-                document.getElementById('reseller-class').value = '';
-                // Si vous avez un champ pour le numéro de classe, réinitialisez-le également
-                document.getElementById('class-number').value = '';
-                form.reset();
-                updateTotals(); // Réinitialiser les totaux affichés
-            } else {
-                form.reset();
-                updateTotals(); // Réinitialiser les totaux affichés
-                document.getElementById('vendor_name').value = vendorName
+            form.reset();
+            if (keepVendorInfo) {
+                document.getElementById('vendor_name').value = vendorName;
                 document.getElementById('reseller-class').value = Niveau;
                 document.getElementById('class-number').value = classe;
             }
-            document.getElementById('cheque-number-container').style.display = 'none'; // Masque le champ
-            document.getElementById('cheque-number').removeAttribute('required'); // Retire l'obligation
+            updateTotals();
+            toggleChequeNumber();
             window.scrollTo(0, 0);
-
-            
-        }
-
+        });
     });
-});
-
-document.addEventListener('DOMContentLoaded', function() {
-    const paymentMethodSelect = document.getElementById('payment-method');
-    const chequeNumberContainer = document.getElementById('cheque-number-container');
-    const chequeNumberInput = document.getElementById('cheque-number');
-
-    // Fonction pour afficher ou masquer le champ numéro de chèque et gérer l'obligation
-    function toggleChequeNumber() {
-        if (paymentMethodSelect.value === 'cheque') {
-            chequeNumberContainer.style.display = 'block'; // Affiche le champ
-            chequeNumberInput.setAttribute('required', 'required'); // Rendre le champ obligatoire
-        } else {
-            chequeNumberContainer.style.display = 'none'; // Masque le champ
-            chequeNumberInput.removeAttribute('required'); // Retire l'obligation
-        }
-    }
-
-    // Écouteur d'événements pour le changement de mode de paiement
-    paymentMethodSelect.addEventListener('change', toggleChequeNumber);
-
-    // Appel initial pour définir l'état du champ au chargement de la page
-    toggleChequeNumber(); // Vérifie l'état du champ au chargement
-});
-</script>
+    </script>
 </body>
 </html>

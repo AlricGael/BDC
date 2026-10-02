@@ -4,83 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Détection des Erreurs</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1, h2 {
-            color: #333;
-            text-align: center;
-        }
-        .error-section {
-            margin: 20px auto;
-            max-width: 1200px;
-        }
-        .error-type {
-            background-color: #dc3545;
-            color: white;
-            padding: 10px;
-            margin-top: 30px;
-            border-radius: 5px;
-        }
-        .table-container {
-            overflow-x: auto;
-            margin: 10px 0;
-            background-color: white;
-            border-radius: 5px;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f8f8f8;
-            font-weight: bold;
-            color: #333;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        .error-row {
-            background-color: #ffe6e6;
-        }
-        .no-errors {
-            text-align: center;
-            padding: 20px;
-            color: #28a745;
-            font-weight: bold;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <a href="admin.html" style="position: absolute; top: 20px; left: 20px; text-decoration: none;">
-        <button style="padding: 5px 10px; font-size: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Retour
-        </button>
-    </a>
+    <header class="topbar">
+        <a href="admin.html" class="btn">← Retour</a>
+        <h1>Détection des Erreurs Potentielles</h1>
+        <button type="button" class="btn" onclick="location.reload();">↻ Rafraîchir</button>
+    </header>
 
-    <button onclick="location.reload();" style="position: absolute; top: 20px; left: 100px; padding: 5px 10px; font-size: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        Rafraîchir
-    </button>
-
-    <h1>Détection des Erreurs Potentielles</h1>
+    <main class="page page-wide">
     
-    <div id="errorContainer" class="error-section">
+    <div id="errorContainer" >
         <!-- Les sections d'erreurs seront insérées ici -->
     </div>
+    </main>
+
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
@@ -272,9 +214,7 @@
             
             if (subtitle) {
                 const subtitleDiv = document.createElement('div');
-                subtitleDiv.style.padding = '10px';
-                subtitleDiv.style.backgroundColor = '#f8f8f8';
-                subtitleDiv.style.fontWeight = 'bold';
+                subtitleDiv.className = "table-subtitle";
                 subtitleDiv.textContent = subtitle;
                 container.appendChild(subtitleDiv);
             }
@@ -294,7 +234,7 @@
                 </thead>
                 <tbody>
                     ${data.map(item => `
-                        <tr class="error-row">
+                        <tr class="row-error">
                             <td>${item.id}</td>
                             <td>${item.order_id}</td>
                             <td>${item.vendor_name}</td>

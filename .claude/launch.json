@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "bdc-static",
+      "runtimeExecutable": "powershell.exe",
+      "runtimeArgs": ["-NoProfile", "-ExecutionPolicy", "Bypass", "-File", "C:\\Users\\Alric\\AppData\\Local\\Temp\\claude\\C--Users-Alric-Documents-GitHub-BDC\\062591ce-d509-4cbd-ba01-4b4c87d0d4c6\\scratchpad\\serve.ps1", "-Root", "C:\\Users\\Alric\\Documents\\GitHub\\BDC", "-Port", "5173"],
+      "port": 5173
+    }
+  ]
+}

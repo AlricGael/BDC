@@ -4,71 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Récapitulatif des commandes</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            margin: 0;
-            padding: 20px;
-            background-color: #f4f4f4;
-        }
-        h1 {
-            color: #333;
-            text-align: center;
-        }
-        .table-container {
-            overflow-x: auto;
-        }
-        table {
-            border-collapse: collapse;
-            width: 100%;
-            background-color: #fff;
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.1);
-        }
-        th, td {
-            padding: 12px 15px;
-            text-align: left;
-            border-bottom: 1px solid #ddd;
-        }
-        th {
-            background-color: #f8f8f8;
-            font-weight: bold;
-            color: #333;
-            text-transform: uppercase;
-        }
-        tr:hover {
-            background-color: #f5f5f5;
-        }
-        tr:nth-child(even) {
-            background-color: #f9f9f9;
-        }
-        th button {
-            padding: 2px 8px;
-            margin-left: 5px;
-            background-color: #007bff;
-            color: white;
-            border: none;
-            border-radius: 3px;
-            cursor: pointer;
-            font-size: 12px;
-        }
-        th button:hover {
-            background-color: #0056b3;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-    <h1>Récapitulatif des commandes</h1>
-    
-    <a href="admin.html" style="position: absolute; top: 20px; left: 20px; text-decoration: none;">
-        <button style="padding: 5px 10px; font-size: 12px; background-color: #007bff; color: white; border: none; border-radius: 4px; cursor: pointer;">
-            Retour
-        </button>
-    </a>
+    <header class="topbar">
+        <a href="admin.html" class="btn">← Retour</a>
+        <h1>Récapitulatif des commandes</h1>
+        <button type="button" class="btn" onclick="location.reload();">↻ Rafraîchir</button>
+    </header>
 
-    <button onclick="location.reload();" style="position: absolute; top: 20px; left: 100px; padding: 5px 10px; font-size: 12px; background-color: #28a745; color: white; border: none; border-radius: 4px; cursor: pointer;">
-        Rafraîchir
-    </button>
+    <main class="page page-full">
 
     <div class="table-container">
         <table id="ordersTable">
@@ -77,31 +25,31 @@
                     <th>Order ID <input type="text" id="searchId" oninput="filterTable()"></th>
                     <th>Nom du Vendeur <input type="text" id="searchVendor" oninput="filterTable()"></th>
                     <th>Nom du Client <input type="text" id="searchClient" oninput="filterTable()"></th>
-                    <th>BCCOL Quantité <button onclick="filterNonZero(3)">Voir</button></th>
-                    <th>EGPN170 Quantité <button onclick="filterNonZero(4)">Voir</button></th>
-                    <th>PGNA110 Quantité <button onclick="filterNonZero(5)">Voir</button></th>
-                    <th>PGCN110 Quantité <button onclick="filterNonZero(6)">Voir</button></th>
-                    <th>BCGCS Quantité <button onclick="filterNonZero(7)">Voir</button></th>
-                    <th>TLCS80A Quantité <button onclick="filterNonZero(8)">Voir</button></th>
-                    <th>TNP80 Quantité <button onclick="filterNonZero(9)">Voir</button></th>
-                    <th>TNCERT80A Quantité <button onclick="filterNonZero(10)">Voir</button></th>
-                    <th>TBA80 Quantité <button onclick="filterNonZero(11)">Voir</button></th>
-                    <th>PCL110 Quantité <button onclick="filterNonZero(12)">Voir</button></th>
-                    <th>PCLC110 Quantité <button onclick="filterNonZero(13)">Voir</button></th>
-                    <th>PCN110 Quantité <button onclick="filterNonZero(14)">Voir</button></th>
-                    <th>PVMN110 Quantité <button onclick="filterNonZero(15)">Voir</button></th>
-                    <th>PVML110 Quantité <button onclick="filterNonZero(16)">Voir</button></th>
-                    <th>PNLC110 Quantité <button onclick="filterNonZero(17)">Voir</button></th>
-                    <th>PANC110 Quantité <button onclick="filterNonZero(18)">Voir</button></th>
-                    <th>ETPOF Quantité <button onclick="filterNonZero(19)">Voir</button></th>
-                    <th>PON130 Quantité <button onclick="filterNonZero(20)">Voir</button></th>
-                    <th>BACM230F Quantité <button onclick="filterNonZero(21)">Voir</button></th>
-                    <th>BACN230F Quantité <button onclick="filterNonZero(22)">Voir</button></th>
-                    <th>BCACM540 Quantité <button onclick="filterNonZero(23)">Voir</button></th>
-                    <th>PGNN Quantité <button onclick="filterNonZero(24)">Voir</button></th>
-                    <th>PT110 Quantité <button onclick="filterNonZero(25)">Voir</button></th>
-                    <th>PSANP3 Quantité <button onclick="filterNonZero(26)">Voir</button></th>
-                    <th>PSANL Quantité <button onclick="filterNonZero(27)">Voir</button></th>
+                    <th>BCCOL Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(3)">Voir</button></th>
+                    <th>EGPN170 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(4)">Voir</button></th>
+                    <th>PGNA110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(5)">Voir</button></th>
+                    <th>PGCN110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(6)">Voir</button></th>
+                    <th>BCGCS Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(7)">Voir</button></th>
+                    <th>TLCS80A Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(8)">Voir</button></th>
+                    <th>TNP80 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(9)">Voir</button></th>
+                    <th>TNCERT80A Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(10)">Voir</button></th>
+                    <th>TBA80 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(11)">Voir</button></th>
+                    <th>PCL110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(12)">Voir</button></th>
+                    <th>PCLC110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(13)">Voir</button></th>
+                    <th>PCN110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(14)">Voir</button></th>
+                    <th>PVMN110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(15)">Voir</button></th>
+                    <th>PVML110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(16)">Voir</button></th>
+                    <th>PNLC110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(17)">Voir</button></th>
+                    <th>PANC110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(18)">Voir</button></th>
+                    <th>ETPOF Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(19)">Voir</button></th>
+                    <th>PON130 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(20)">Voir</button></th>
+                    <th>BACM230F Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(21)">Voir</button></th>
+                    <th>BACN230F Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(22)">Voir</button></th>
+                    <th>BCACM540 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(23)">Voir</button></th>
+                    <th>PGNN Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(24)">Voir</button></th>
+                    <th>PT110 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(25)">Voir</button></th>
+                    <th>PSANP3 Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(26)">Voir</button></th>
+                    <th>PSANL Quantité <button type="button" class="btn btn-sm" onclick="filterNonZero(27)">Voir</button></th>
                     <th>Méthode de Paiement</th>
                     <th>Numéro de Chèque</th>
                     <th>Montant Total</th>
@@ -113,6 +61,8 @@
             </tbody>
         </table>
     </div>
+    </main>
+
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
