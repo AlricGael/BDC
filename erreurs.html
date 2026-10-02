@@ -118,7 +118,7 @@
 
             // 5. Montants identiques pour le même client le même jour
             const clientDayAmounts = data.reduce((acc, current) => {
-                const key = `${current.client_name}_${current.creation_date}_${current.total_amount}`;
+                const key = `${current.client_name}_${String(current.creation_date).slice(0, 10)}_${current.total_amount}`;
                 if (!acc[key]) {
                     acc[key] = [];
                 }
@@ -241,7 +241,7 @@
                             <td>${item.client_name}</td>
                             <td>${Number(item.total_amount).toFixed(2)}</td>
                             <td>${item.cheque_number || 'Cash'}</td>
-                            <td>${item.creation_date}</td>
+                            <td>${item.creation_date ? new Date(item.creation_date).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) : ""}</td>
                         </tr>
                     `).join('')}
                 </tbody>

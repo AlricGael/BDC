@@ -105,7 +105,7 @@
                         <td>${item.client_name}</td>
                         <td>${item.vendor_name}</td>
                         <td>${Number(item.total_amount).toFixed(2)}</td>
-                        <td>${item.creation_date}</td>
+                        <td>${item.creation_date ? new Date(item.creation_date).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" }) : ""}</td>
                         <td>${item.cheque_number || 'Cash'}</td>
                     `;
                     duplicatesBody.appendChild(row);
