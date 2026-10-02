@@ -44,6 +44,7 @@
                     </div>
                     <div class="field">
                         <label for="vendor_name">Nom Prénom du vendeur</label>
+                        <select id="vendor-select" hidden></select>
                         <input type="text" id="vendor_name" name="vendor_name" autocomplete="off" required>
                     </div>
                     <div class="field">
@@ -230,6 +231,7 @@
     </main>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="eleves.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('order-form');
@@ -240,6 +242,46 @@
         const chequeNumberInput = document.getElementById('cheque-number');
         const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
         let totalprix = 0;
+
+        const resellerClassSelect = document.getElementById('reseller-class');
+        const classNumberSelect = document.getElementById('class-number');
+        const vendorSelect = document.getElementById('vendor-select');
+        const vendorInput = document.getElementById('vendor_name');
+        const AUTRE = '__autre__';
+
+        // Si la liste des élèves de la classe est connue, le vendeur se choisit dans une liste
+        function refreshVendorField() {
+            const eleves = (typeof ELEVES !== 'undefined' && ELEVES[resellerClassSelect.value + classNumberSelect.value]) || null;
+            const previous = vendorInput.value;
+
+            if (!eleves) {
+                vendorSelect.hidden = true;
+                vendorSelect.required = false;
+                vendorInput.hidden = false;
+                return;
+            }
+
+            vendorSelect.innerHTML = '';
+            vendorSelect.add(new Option('Choisir un élève…', ''));
+            eleves.forEach(nom => vendorSelect.add(new Option(nom, nom.toUpperCase())));
+            vendorSelect.add(new Option('Autre (saisir le nom)…', AUTRE));
+
+            vendorSelect.value = eleves.some(nom => nom.toUpperCase() === previous.toUpperCase()) ? previous.toUpperCase() : '';
+            if (vendorSelect.value === '') vendorInput.value = '';
+            vendorSelect.hidden = false;
+            vendorSelect.required = true;
+            vendorInput.hidden = true;
+        }
+
+        vendorSelect.addEventListener('change', () => {
+            const autre = vendorSelect.value === AUTRE;
+            vendorInput.hidden = !autre;
+            vendorInput.value = autre ? '' : vendorSelect.value;
+            if (autre) vendorInput.focus();
+        });
+
+        resellerClassSelect.addEventListener('change', refreshVendorField);
+        classNumberSelect.addEventListener('change', refreshVendorField);
 
         const getPaymentMethod = () => form.querySelector('input[name="payment-method"]:checked').value;
 
@@ -286,6 +328,7 @@
 
         updateTotals();
         toggleChequeNumber();
+        refreshVendorField();
 
         form.addEventListener('submit', async (event) => {
             event.preventDefault();
@@ -336,6 +379,7 @@
                 document.getElementById('reseller-class').value = Niveau;
                 document.getElementById('class-number').value = classe;
             }
+            refreshVendorField();
             updateTotals();
             toggleChequeNumber();
             window.scrollTo(0, 0);
