@@ -43,15 +43,13 @@
     <script>
         const { createClient } = supabase
         const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
-        const PREMIERE_COLONNE_PRODUIT = 3;
-        let filtreProduit = null; // index de la colonne produit filtrée, ou null
 
         // En-têtes des colonnes produits
         const paymentHeader = document.querySelector('#headRow th:nth-child(4)');
-        PRODUITS.forEach((p, i) => {
+        PRODUITS.forEach(p => {
             const th = document.createElement('th');
             th.title = p.nom;
-            th.innerHTML = `${p.code} <button type="button" class="btn btn-sm" onclick="filterNonZero(${PREMIERE_COLONNE_PRODUIT + i}, this)">Voir</button>`;
+            th.textContent = p.code;
             paymentHeader.before(th);
         });
 
@@ -93,13 +91,6 @@
 
         loadData();
 
-        // Bouton « Voir » : n'affiche que les commandes contenant ce produit (re-cliquer pour tout afficher)
-        function filterNonZero(columnIndex, button) {
-            filtreProduit = filtreProduit === columnIndex ? null : columnIndex;
-            document.querySelectorAll('#headRow .btn-sm').forEach(b => b.classList.toggle('active', b === button && filtreProduit !== null));
-            filterTable();
-        }
-
         function filterTable() {
             const searchId = document.getElementById('searchId').value.toLowerCase();
             const searchVendor = document.getElementById('searchVendor').value.toLowerCase();
@@ -111,8 +102,7 @@
                 const visible =
                     cells[0].textContent.toLowerCase().includes(searchId) &&
                     cells[1].textContent.toLowerCase().includes(searchVendor) &&
-                    cells[2].textContent.toLowerCase().includes(searchClient) &&
-                    (filtreProduit === null || (parseInt(cells[filtreProduit].textContent) || 0) > 0);
+                    cells[2].textContent.toLowerCase().includes(searchClient);
                 row.style.display = visible ? '' : 'none';
             }
         }
