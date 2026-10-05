@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Récapitulatif des commandes</title>
+    <title>Toutes les commandes</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,23 +12,25 @@
 <body>
     <header class="topbar">
         <a href="admin.html" class="btn">← Retour</a>
-        <h1>Récapitulatif des commandes</h1>
+        <h1>Toutes les commandes</h1>
+        <button type="button" class="btn" id="export">⤓ Excel</button>
         <button type="button" class="btn" onclick="location.reload();">↻ Rafraîchir</button>
     </header>
 
     <main class="page page-full">
+        <p class="hint">Cliquez sur une commande pour la modifier ou la supprimer.</p>
         <div class="table-container">
             <table id="ordersTable">
                 <thead>
                     <tr id="headRow">
-                        <th>Order ID <input type="text" id="searchId" oninput="filterTable()"></th>
-                        <th>Nom du Vendeur <input type="text" id="searchVendor" oninput="filterTable()"></th>
-                        <th>Nom du Client <input type="text" id="searchClient" oninput="filterTable()"></th>
+                        <th>Classe <input type="text" id="searchId" oninput="filterTable()"></th>
+                        <th>Vendeur <input type="text" id="searchVendor" oninput="filterTable()"></th>
+                        <th>Client <input type="text" id="searchClient" oninput="filterTable()"></th>
                         <!-- Colonnes produits générées depuis produits.js -->
-                        <th>Méthode de Paiement</th>
-                        <th>Numéro de Chèque</th>
-                        <th>Montant Total</th>
-                        <th>Date de Création</th>
+                        <th>Paiement</th>
+                        <th>N° chèque</th>
+                        <th class="amount">Montant</th>
+                        <th>Date</th>
                     </tr>
                 </thead>
                 <tbody id="ordersBody">
@@ -38,11 +40,56 @@
         </div>
     </main>
 
+    <dialog id="edit-dialog">
+        <form method="dialog" id="edit-form">
+            <div class="dialog-head">
+                <h2>Modifier la commande <span id="edit-id"></span></h2>
+                <p id="edit-date"></p>
+            </div>
+            <div class="dialog-body">
+                <div class="grid-2">
+                    <div class="field">
+                        <label for="edit-classe">Classe (niveau + numéro, ex. 61)</label>
+                        <input type="number" id="edit-classe" min="31" max="69" required>
+                    </div>
+                    <div class="field">
+                        <label for="edit-paiement">Paiement</label>
+                        <select id="edit-paiement">
+                            <option value="cash">Espèces</option>
+                            <option value="cheque">Chèque</option>
+                        </select>
+                    </div>
+                    <div class="field">
+                        <label for="edit-vendeur">Vendeur</label>
+                        <input type="text" id="edit-vendeur" required>
+                    </div>
+                    <div class="field">
+                        <label for="edit-client">Client</label>
+                        <input type="text" id="edit-client" required>
+                    </div>
+                    <div class="field" id="edit-cheque-field">
+                        <label for="edit-cheque">N° de chèque</label>
+                        <input type="text" id="edit-cheque">
+                    </div>
+                </div>
+                <div class="edit-produits" id="edit-produits"></div>
+                <div class="recap-total"><span>Total</span><strong id="edit-total"></strong></div>
+            </div>
+            <div class="dialog-actions">
+                <button type="button" class="btn btn-danger" id="edit-supprimer">Supprimer</button>
+                <span class="spacer-flex"></span>
+                <button type="button" class="btn" id="edit-annuler">Annuler</button>
+                <button type="submit" class="btn btn-primary" id="edit-enregistrer">Enregistrer</button>
+            </div>
+        </form>
+    </dialog>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="produits.js"></script>
+    <script src="commun.js"></script>
     <script>
-        const { createClient } = supabase
-        const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
+        let commandes = [];
+        let commandeEditee = null;
 
         // En-têtes des colonnes produits
         const paymentHeader = document.querySelector('#headRow th:nth-child(4)');
@@ -53,40 +100,36 @@
             paymentHeader.before(th);
         });
 
-        const formatDate = value => value ? new Date(value).toLocaleString('fr-FR', { dateStyle: 'short', timeStyle: 'short' }) : '';
-
         async function loadData() {
-            const { data, error } = await _supabase
-                .from('BDCElhuyar')
-                .select('*')
-                .order('order_id', { ascending: true });
-
-            if (error) {
-                console.error('Erreur lors du chargement des données:', error);
-                return;
-            }
+            const data = await chargerCommandes();
+            if (!data) return;
+            commandes = data;
 
             const ordersBody = document.getElementById('ordersBody');
             ordersBody.innerHTML = '';
             data.forEach(item => {
                 const cells = [
-                    item.order_id,
+                    formatClasse(item.order_id),
                     item.vendor_name,
                     item.client_name,
-                    ...PRODUITS.map(p => item[p.code + '_quantity'] || 0),
+                    ...PRODUITS.map(p => quantite(item, p) || ''),
                     item.payment_method === 'cheque' ? 'Chèque' : 'Espèces',
                     item.cheque_number || '',
-                    Number(item.total_amount).toFixed(2),
-                    isNaN(new Date(item.creation_date)) ? (item.creation_date || '') : formatDate(item.creation_date),
+                    formatEuros(item.total_amount),
+                    formatDate(item.creation_date),
                 ];
                 const row = document.createElement('tr');
-                cells.forEach(value => {
+                row.className = 'clickable';
+                row.addEventListener('click', () => ouvrirEdition(item));
+                cells.forEach((value, i) => {
                     const td = document.createElement('td');
                     td.textContent = value ?? '';
+                    if (i === cells.length - 2) td.className = 'amount';
                     row.appendChild(td);
                 });
                 ordersBody.appendChild(row);
             });
+            filterTable();
         }
 
         loadData();
@@ -106,6 +149,88 @@
                 row.style.display = visible ? '' : 'none';
             }
         }
+
+        // Ne pas ouvrir la commande quand on clique dans un champ de recherche
+        document.querySelectorAll('#headRow input').forEach(input => input.addEventListener('click', e => e.stopPropagation()));
+
+        document.getElementById('export').addEventListener('click', () => {
+            telechargerCsv(`commandes-${new Date().toISOString().slice(0, 10)}.csv`, lignesCommandes(commandes));
+        });
+
+        // ---- Modification / suppression d'une commande ----
+        const dialog = document.getElementById('edit-dialog');
+        const champ = id => document.getElementById(id);
+
+        champ('edit-produits').innerHTML = PRODUITS.map(p => `
+            <label class="edit-ligne">
+                <span><strong>${p.code}</strong> ${escapeHtml(p.nom)}</span>
+                <input type="number" min="0" data-code="${p.code}" inputmode="numeric">
+            </label>`).join('');
+        const champsQuantite = [...dialog.querySelectorAll('[data-code]')];
+
+        function totalEdition() {
+            return Math.round(PRODUITS.reduce((sum, p, i) => sum + (parseInt(champsQuantite[i].value) || 0) * p.prix, 0) * 100) / 100;
+        }
+
+        function rafraichirEdition() {
+            champ('edit-total').textContent = formatEuros(totalEdition());
+            champ('edit-cheque-field').hidden = champ('edit-paiement').value !== 'cheque';
+            champsQuantite.forEach(input => input.closest('.edit-ligne').classList.toggle('has-qty', (parseInt(input.value) || 0) > 0));
+        }
+
+        dialog.addEventListener('input', rafraichirEdition);
+
+        function ouvrirEdition(item) {
+            commandeEditee = item;
+            champ('edit-id').textContent = `n° ${item.id}`;
+            champ('edit-date').textContent = `Enregistrée le ${formatDate(item.creation_date)}`;
+            champ('edit-classe').value = item.order_id ?? '';
+            champ('edit-vendeur').value = item.vendor_name ?? '';
+            champ('edit-client').value = item.client_name ?? '';
+            champ('edit-paiement').value = item.payment_method === 'cheque' ? 'cheque' : 'cash';
+            champ('edit-cheque').value = item.cheque_number ?? '';
+            PRODUITS.forEach((p, i) => { champsQuantite[i].value = quantite(item, p); });
+            rafraichirEdition();
+            dialog.showModal();
+        }
+
+        champ('edit-annuler').addEventListener('click', () => dialog.close());
+
+        champ('edit-form').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const modifications = {
+                order_id: parseInt(champ('edit-classe').value),
+                vendor_name: champ('edit-vendeur').value.trim().toUpperCase(),
+                client_name: champ('edit-client').value.trim().toUpperCase(),
+                payment_method: champ('edit-paiement').value,
+                cheque_number: champ('edit-paiement').value === 'cheque' ? champ('edit-cheque').value.trim() : null,
+                total_amount: totalEdition(),
+            };
+            PRODUITS.forEach((p, i) => { modifications[p.code + '_quantity'] = parseInt(champsQuantite[i].value) || 0; });
+
+            const { error } = await db.from(TABLE).update(modifications).eq('id', commandeEditee.id);
+            if (error) {
+                toast('Erreur lors de la modification : ' + error.message, 'error');
+                return;
+            }
+            dialog.close();
+            toast('Commande modifiée');
+            loadData();
+        });
+
+        champ('edit-supprimer').addEventListener('click', async () => {
+            const c = commandeEditee;
+            if (!confirm(`Supprimer définitivement la commande de ${c.client_name} (${formatEuros(c.total_amount)}) ?`)) return;
+
+            const { error } = await db.from(TABLE).delete().eq('id', c.id);
+            if (error) {
+                toast('Erreur lors de la suppression : ' + error.message, 'error');
+                return;
+            }
+            dialog.close();
+            toast('Commande supprimée');
+            loadData();
+        });
     </script>
 </body>
 </html>

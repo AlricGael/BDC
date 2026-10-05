@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fiches de distribution</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header class="topbar">
+        <a href="admin.html" class="btn">← Retour</a>
+        <h1>Fiches de distribution</h1>
+        <button type="button" class="btn btn-primary" onclick="window.print();">🖨 Imprimer</button>
+    </header>
+
+    <main class="page">
+        <div class="toolbar">
+            <select id="filtre-classe" aria-label="Classe à afficher">
+                <option value="">Toutes les classes</option>
+            </select>
+        </div>
+        <p class="hint no-print">Une page par classe à l'impression. Pour chaque élève : ses clients, les produits à leur remettre, et le total à préparer.</p>
+        <div id="fiches"></div>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="produits.js"></script>
+    <script src="commun.js"></script>
+    <script>
+        let commandes = [];
+
+        // « 2 × Truffe au Rhum, 1 × Boîte Festive »
+        const listeProduits = quantites => PRODUITS
+            .filter(p => quantites[p.code] > 0)
+            .map(p => `<strong>${quantites[p.code]}</strong>&nbsp;×&nbsp;${escapeHtml(p.nom)}`)
+            .join(', ');
+
+        const quantitesDe = items => Object.fromEntries(PRODUITS.map(p => [p.code, items.reduce((s, item) => s + quantite(item, p), 0)]));
+        const somme = items => items.reduce((s, item) => s + (Number(item.total_amount) || 0), 0);
+        const grouper = (items, cle) => items.reduce((m, item) => m.set(cle(item), [...(m.get(cle(item)) || []), item]), new Map());
+
+        function afficher() {
+            const filtre = document.getElementById('filtre-classe').value;
+            const parClasse = grouper(commandes.filter(c => !filtre || String(c.order_id) === filtre), c => String(c.order_id));
+
+            if (parClasse.size === 0) {
+                document.getElementById('fiches').innerHTML = '<div class="no-errors">Aucune commande à distribuer</div>';
+                return;
+            }
+
+            document.getElementById('fiches').innerHTML = [...parClasse].map(([classe, items]) => {
+                const parVendeur = grouper(items, c => c.vendor_name);
+                return `
+                <section class="fiche-classe">
+                    <h2>${escapeHtml(formatClasse(classe))} <small class="hint">— ${items.length} commande${items.length > 1 ? 's' : ''} · ${formatEuros(somme(items))}</small></h2>
+                    ${[...parVendeur].sort(([a], [b]) => a.localeCompare(b)).map(([vendeur, ventes]) => {
+                        const especes = somme(ventes.filter(v => v.payment_method !== 'cheque'));
+                        const nbCheques = ventes.filter(v => v.payment_method === 'cheque').length;
+                        return `
+                        <article class="fiche-vendeur">
+                            <h3>${escapeHtml(vendeur)} <small>${ventes.length} client${ventes.length > 1 ? 's' : ''} · ${formatEuros(somme(ventes))}</small></h3>
+                            ${ventes.sort((a, b) => a.client_name.localeCompare(b.client_name)).map(v => `
+                            <div class="fiche-client">
+                                <span class="coche"></span>
+                                <span class="client-nom">${escapeHtml(v.client_name)}</span>
+                                <span class="client-montant">${formatEuros(v.total_amount)} · ${escapeHtml(formatPaiement(v))}</span>
+                                <span class="client-produits">${listeProduits(quantitesDe([v]))}</span>
+                            </div>`).join('')}
+                            <div class="fiche-client">
+                                <span></span>
+                                <span class="client-nom">À préparer pour ${escapeHtml(vendeur)}</span>
+                                <span class="client-montant">${ventes.reduce((s, v) => s + nbArticles(v), 0)} articles</span>
+                                <span class="client-produits">${listeProduits(quantitesDe(ventes))}</span>
+                            </div>
+                            <div class="fiche-total">
+                                <span>Espèces : ${formatEuros(especes)}</span>
+                                <span>Chèques : ${nbCheques}</span>
+                                <span>Total : ${formatEuros(somme(ventes))}</span>
+                            </div>
+                        </article>`;
+                    }).join('')}
+                </section>`;
+            }).join('');
+        }
+
+        async function loadData() {
+            const data = await chargerCommandes();
+            if (!data) return;
+            commandes = data;
+
+            const select = document.getElementById('filtre-classe');
+            [...new Set(data.map(c => String(c.order_id)))].sort().forEach(classe => select.add(new Option(formatClasse(classe), classe)));
+            select.addEventListener('change', afficher);
+            afficher();
+        }
+
+        loadData();
+    </script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Top 10 des Vendeurs</title>
+    <title>Classements</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,600&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
@@ -12,112 +12,111 @@
 <body>
     <header class="topbar">
         <a href="admin.html" class="btn">← Retour</a>
-        <h1>Top 10 des Vendeurs</h1>
+        <h1>Classements</h1>
         <button type="button" class="btn" onclick="location.reload();">↻ Rafraîchir</button>
     </header>
 
     <main class="page page-wide">
-    
-    <!-- Ajouter les boutons de tri -->
-    <div class="toolbar">
-        <button id="sortBySales" class="btn active" onclick="sortData('sales')">
-            Trier par nombre de ventes
-        </button>
-        <button id="sortByRevenue" class="btn" onclick="sortData('revenue')">
-            Trier par chiffre d'affaires
-        </button>
-    </div>
+        <div class="toolbar">
+            <button id="sortBySales" class="btn active" onclick="sortData('sales')">Par nombre de ventes</button>
+            <button id="sortByRevenue" class="btn" onclick="sortData('revenue')">Par chiffre d'affaires</button>
+        </div>
 
-    <div class="table-container">
-        <table>
-            <thead>
-                <tr>
-                    <th>Rang</th>
-                    <th>Vendeur</th>
-                    <th>Nombre de Ventes</th>
-                    <th>Chiffre d'Affaires</th>
-                </tr>
-            </thead>
-            <tbody id="vendorsBody">
-                <!-- Les données seront insérées ici -->
-            </tbody>
-        </table>
-    </div>
+        <h2 class="section-title">Classement des classes</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rang</th>
+                        <th>Classe</th>
+                        <th class="amount">Ventes</th>
+                        <th class="amount">Articles</th>
+                        <th class="amount">Chiffre d'affaires</th>
+                        <th class="cell-bar"></th>
+                    </tr>
+                </thead>
+                <tbody id="classesBody"></tbody>
+            </table>
+        </div>
+
+        <h2 class="section-title">Top 10 des vendeurs</h2>
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Rang</th>
+                        <th>Vendeur</th>
+                        <th>Classe</th>
+                        <th class="amount">Ventes</th>
+                        <th class="amount">Chiffre d'affaires</th>
+                    </tr>
+                </thead>
+                <tbody id="vendorsBody"></tbody>
+            </table>
+        </div>
     </main>
 
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="produits.js"></script>
+    <script src="commun.js"></script>
     <script>
-        const { createClient } = supabase;
-        const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs');
+        let classesData = [];
+        let vendorsData = [];
 
-        let vendorsData = []; // Variable globale pour stocker les données
+        // Regroupe les commandes selon une clé (classe ou vendeur)
+        function regrouper(data, cle, extra = () => ({})) {
+            const groupes = {};
+            data.forEach(item => {
+                const k = cle(item);
+                groupes[k] ??= { key: k, sales: 0, revenue: 0, articles: 0, ...extra(item) };
+                groupes[k].sales++;
+                groupes[k].revenue += Number(item.total_amount) || 0;
+                groupes[k].articles += nbArticles(item);
+            });
+            return Object.values(groupes);
+        }
 
         async function loadData() {
-            const { data, error } = await _supabase
-                .from('BDCElhuyar')
-                .select('*');
-
-            if (error) {
-                console.error('Erreur lors du chargement des données:', error);
-                return;
-            }
-
-            // Grouper les données par vendeur
-            const vendorStats = {};
-            data.forEach(item => {
-                if (!vendorStats[item.vendor_name]) {
-                    vendorStats[item.vendor_name] = {
-                        sales: 0,
-                        revenue: 0
-                    };
-                }
-                vendorStats[item.vendor_name].sales++;
-                vendorStats[item.vendor_name].revenue += item.total_amount || 0;
-            });
-
-            // Convertir en tableau
-            vendorsData = Object.entries(vendorStats)
-                .map(([name, stats]) => ({
-                    name,
-                    sales: stats.sales,
-                    revenue: stats.revenue
-                }));
-
-            // Tri initial par nombre de ventes
+            const data = await chargerCommandes();
+            if (!data) return;
+            classesData = regrouper(data, item => String(item.order_id));
+            vendorsData = regrouper(data, item => `${item.vendor_name}|${item.order_id}`, item => ({ name: item.vendor_name, classe: item.order_id }));
             sortData('sales');
         }
 
+        const rangHtml = index => `<td class="rank ${index < 3 ? `medal-${index + 1}` : ''}"><span>${index + 1}</span></td>`;
+
         function sortData(criterion) {
-            // Mettre à jour l'apparence des boutons
             document.getElementById('sortBySales').classList.toggle('active', criterion === 'sales');
             document.getElementById('sortByRevenue').classList.toggle('active', criterion === 'revenue');
+            const tri = (a, b) => b[criterion] - a[criterion] || b.revenue - a.revenue;
 
-            // Trier les données
-            const sortedVendors = [...vendorsData]
-                .sort((a, b) => b[criterion] - a[criterion])
-                .slice(0, 10);
+            // Classes : toutes, avec une barre proportionnelle à la meilleure
+            const classes = [...classesData].sort(tri);
+            const max = Math.max(1, ...classes.map(c => c[criterion]));
+            document.getElementById('classesBody').innerHTML = classes.length ? classes.map((c, i) => `
+                <tr>
+                    ${rangHtml(i)}
+                    <td><strong>${escapeHtml(formatClasse(c.key))}</strong></td>
+                    <td class="amount">${c.sales}</td>
+                    <td class="amount">${c.articles}</td>
+                    <td class="amount">${formatEuros(c.revenue)}</td>
+                    <td class="cell-bar"><div class="bar"><span style="width:${(c[criterion] / max * 100).toFixed(1)}%"></span></div></td>
+                </tr>`).join('') : '<tr><td colspan="6" class="empty">Aucune commande pour le moment</td></tr>';
 
-            // Afficher les résultats
-            const vendorsBody = document.getElementById('vendorsBody');
-            vendorsBody.innerHTML = '';
-            
-            sortedVendors.forEach((vendor, index) => {
-                const row = document.createElement('tr');
-                const rankClass = index < 3 ? `medal-${index + 1}` : '';
-                row.innerHTML = `
-                    <td class="rank ${rankClass}"><span>${index + 1}</span></td>
-                    <td>${vendor.name}</td>
-                    <td>${vendor.sales}</td>
-                    <td>${Number(vendor.revenue).toFixed(2)} €</td>
-                `;
-                vendorsBody.appendChild(row);
-            });
+            // Vendeurs : les 10 premiers
+            const vendors = [...vendorsData].sort(tri).slice(0, 10);
+            document.getElementById('vendorsBody').innerHTML = vendors.length ? vendors.map((v, i) => `
+                <tr>
+                    ${rangHtml(i)}
+                    <td>${escapeHtml(v.name)}</td>
+                    <td>${escapeHtml(formatClasse(v.classe))}</td>
+                    <td class="amount">${v.sales}</td>
+                    <td class="amount">${formatEuros(v.revenue)}</td>
+                </tr>`).join('') : '<tr><td colspan="5" class="empty">Aucune commande pour le moment</td></tr>';
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-        });
+        loadData();
     </script>
 </body>
-</html> 
+</html>

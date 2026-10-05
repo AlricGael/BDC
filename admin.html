@@ -21,15 +21,22 @@
             <h1>Tableau de bord</h1>
         </header>
 
+        <div class="kpis" id="kpis">
+            <div class="kpi"><div class="kpi-label">Chiffre d'affaires</div><div class="kpi-value" id="kpi-ca">…</div><div class="kpi-sub" id="kpi-panier"></div></div>
+            <div class="kpi"><div class="kpi-label">Commandes</div><div class="kpi-value" id="kpi-commandes">…</div><div class="kpi-sub" id="kpi-vendeurs"></div></div>
+            <div class="kpi"><div class="kpi-label">Articles vendus</div><div class="kpi-value" id="kpi-articles">…</div><div class="kpi-sub" id="kpi-top"></div></div>
+            <div class="kpi"><div class="kpi-label">Espèces / chèques</div><div class="kpi-value" id="kpi-especes">…</div><div class="kpi-sub" id="kpi-cheques"></div><div class="bar"><span id="kpi-bar" style="width:0"></span></div></div>
+        </div>
+
         <h2 class="section-title">Récapitulatifs</h2>
         <div class="tiles">
             <a href="recap.html" class="tile">
                 <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg></div>
-                <div><strong>Récapitulatif global</strong><span>Quantités totales par produit</span></div>
+                <div><strong>Totaux par produit</strong><span>Quantités à commander, export Excel</span></div>
             </a>
             <a href="recapsimple.html" class="tile">
                 <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="16" rx="2"/><path d="M3 10h18M9 4v16"/></svg></div>
-                <div><strong>Récapitulatif détaillé</strong><span>Toutes les commandes, filtrables</span></div>
+                <div><strong>Toutes les commandes</strong><span>Rechercher, modifier, supprimer, exporter</span></div>
             </a>
             <a href="recap_orderid.html" class="tile">
                 <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg></div>
@@ -37,11 +44,19 @@
             </a>
         </div>
 
+        <h2 class="section-title">Livraison</h2>
+        <div class="tiles">
+            <a href="distribution.html" class="tile tile-green">
+                <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9V2h12v7"/><path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/><rect x="6" y="14" width="12" height="8"/></svg></div>
+                <div><strong>Fiches de distribution</strong><span>Par classe et par élève, à imprimer</span></div>
+            </a>
+        </div>
+
         <h2 class="section-title">Statistiques</h2>
         <div class="tiles">
             <a href="top_vendeurs.html" class="tile tile-gold">
                 <div class="tile-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 21h8M12 17v4M7 4h10v5a5 5 0 0 1-10 0V4z"/><path d="M17 5h3v2a3 3 0 0 1-3 3M7 5H4v2a3 3 0 0 0 3 3"/></svg></div>
-                <div><strong>Top 10 vendeurs</strong><span>Ventes et chiffre d'affaires</span></div>
+                <div><strong>Classements</strong><span>Classes et top 10 des vendeurs</span></div>
             </a>
         </div>
 
@@ -61,5 +76,34 @@
             </a>
         </div>
     </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="produits.js"></script>
+    <script src="commun.js"></script>
+    <script>
+        // Tableau de bord : chiffres clés de la vente
+        (async () => {
+            const data = await chargerCommandes();
+            if (!data) return;
+            const set = (id, texte) => { document.getElementById(id).textContent = texte; };
+
+            const ca = data.reduce((s, c) => s + (Number(c.total_amount) || 0), 0);
+            const especes = data.filter(c => c.payment_method !== "cheque").reduce((s, c) => s + (Number(c.total_amount) || 0), 0);
+            const nbCheques = data.filter(c => c.payment_method === "cheque").length;
+            const articles = data.reduce((s, c) => s + nbArticles(c), 0);
+            const vendeurs = new Set(data.map(c => c.vendor_name)).size;
+            const top = PRODUITS.map(p => ({ p, q: data.reduce((s, c) => s + quantite(c, p), 0) })).sort((a, b) => b.q - a.q)[0];
+
+            set("kpi-ca", formatEuros(ca));
+            set("kpi-panier", data.length ? `Panier moyen : ${formatEuros(ca / data.length)}` : "Aucune commande");
+            set("kpi-commandes", data.length);
+            set("kpi-vendeurs", `${vendeurs} vendeur${vendeurs > 1 ? "s" : ""}`);
+            set("kpi-articles", articles);
+            set("kpi-top", top && top.q ? `N°1 : ${top.p.nom} (${top.q})` : "");
+            set("kpi-especes", formatEuros(especes));
+            set("kpi-cheques", `Chèques : ${formatEuros(ca - especes)} (${nbCheques})`);
+            document.getElementById("kpi-bar").style.width = ca ? `${(especes / ca * 100).toFixed(1)}%` : "0";
+        })();
+    </script>
 </body>
 </html>

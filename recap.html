@@ -12,7 +12,8 @@
 <body>
     <header class="topbar">
         <a href="admin.html" class="btn">← Retour</a>
-        <h1>Récapitulatif des Totaux des Produits</h1>
+        <h1>Totaux par produit</h1>
+        <button type="button" class="btn" id="export">⤓ Excel</button>
         <button type="button" class="btn" onclick="location.reload();">↻ Rafraîchir</button>
     </header>
 
@@ -43,42 +44,40 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="produits.js"></script>
+    <script src="commun.js"></script>
     <script>
-        const { createClient } = supabase
-        const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs')
-        const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
-
         async function loadData() {
-            const { data, error } = await _supabase
-                .from('BDCElhuyar')
-                .select('*');
-
-            if (error) {
-                console.error('Erreur lors du chargement des données:', error);
-                return;
-            }
+            const data = await chargerCommandes();
+            if (!data) return;
 
             // Quantité totale de chaque produit du catalogue
-            const ordersBody = document.getElementById('ordersBody');
-            let totalQty = 0;
-            PRODUITS.forEach(p => {
-                const qty = data.reduce((sum, item) => sum + (item[p.code + '_quantity'] || 0), 0);
-                totalQty += qty;
-                const row = document.createElement('tr');
-                row.innerHTML = `<td></td><td></td><td class="amount">${qty}</td><td class="amount">${euros.format(qty * p.prix)}</td>`;
-                row.cells[0].textContent = p.code;
-                row.cells[1].textContent = p.nom;
+            const ordersBody = document.getElementById("ordersBody");
+            const totaux = PRODUITS.map(p => ({ produit: p, qty: data.reduce((sum, item) => sum + quantite(item, p), 0) }));
+            totaux.forEach(({ produit, qty }) => {
+                const row = document.createElement("tr");
+                row.innerHTML = `<td></td><td></td><td class="amount">${qty}</td><td class="amount">${formatEuros(qty * produit.prix)}</td>`;
+                row.cells[0].textContent = produit.code;
+                row.cells[1].textContent = produit.nom;
                 ordersBody.appendChild(row);
             });
 
+            const totalQty = totaux.reduce((sum, t) => sum + t.qty, 0);
             const totalAmount = data.reduce((sum, item) => sum + (Number(item.total_amount) || 0), 0);
-            document.getElementById('totalQty').textContent = totalQty;
-            document.getElementById('totalAmount').textContent = euros.format(totalAmount);
+            document.getElementById("totalQty").textContent = totalQty;
+            document.getElementById("totalAmount").textContent = formatEuros(totalAmount);
+
+            // Export : la liste à transmettre au chocolatier
+            document.getElementById("export").onclick = () => telechargerCsv(`totaux-produits-${new Date().toISOString().slice(0, 10)}.csv`, [
+                ["Catégorie", "Code", "Produit", "Boîtage", "Poids", "Prix unitaire", "Quantité", "Montant"],
+                ...CATALOGUE.flatMap(c => c.produits.map(p => {
+                    const qty = totaux.find(t => t.produit === p).qty;
+                    return [c.categorie, p.code, p.nom, p.boitage, p.poids, p.prix, qty, Math.round(qty * p.prix * 100) / 100];
+                })),
+                ["", "", "Total", "", "", "", totalQty, Math.round(totalAmount * 100) / 100],
+            ]);
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            loadData();
-        });
+        loadData();
     </script>
 </body>
 </html>

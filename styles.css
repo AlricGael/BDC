@@ -1021,3 +1021,46 @@ tbody tr.clickable { cursor: pointer; }
     .fiche-vendeur { box-shadow: none; border-color: #bbb; }
     .fiche-client .client-produits { color: #333; }
 }
+
+/* Modification d'une commande */
+
+.hint {
+    margin: 0 4px 12px;
+    font-size: 14px;
+    color: var(--muted);
+}
+
+.edit-produits {
+    margin-top: 6px;
+    border-top: 1px solid var(--line);
+}
+
+.edit-ligne {
+    display: grid;
+    grid-template-columns: 1fr 76px;
+    gap: 10px;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 14px;
+    border-bottom: 1px dashed var(--line);
+    cursor: pointer;
+}
+
+.edit-ligne strong {
+    display: inline-block;
+    min-width: 78px;
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.edit-ligne input {
+    min-height: 36px;
+    padding: 6px 8px;
+    text-align: center;
+    font-weight: 700;
+}
+
+.edit-ligne.has-qty input {
+    border-color: var(--brand);
+    background: var(--brand-soft);
+}

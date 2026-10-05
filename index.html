@@ -52,6 +52,7 @@
                         <input type="text" id="client_name" name="client_name" autocomplete="off" required>
                     </div>
                 </div>
+                <label class="check"><input type="checkbox" id="garder-vendeur" checked> Garder le vendeur et sa classe pour la commande suivante</label>
             </section>
 
             <div id="catalogue"></div>
@@ -83,16 +84,30 @@
         </footer>
     </main>
 
+    <dialog id="recap-dialog">
+        <div class="dialog-head">
+            <h2>Vérifier la commande</h2>
+            <p id="recap-sous-titre"></p>
+        </div>
+        <div class="dialog-body">
+            <ul class="recap-list" id="recap-lignes"></ul>
+            <div class="recap-total"><span id="recap-paiement"></span><strong id="recap-total"></strong></div>
+        </div>
+        <div class="dialog-actions">
+            <button type="button" class="btn" id="recap-annuler">Modifier</button>
+            <button type="button" class="btn btn-primary" id="recap-confirmer">Enregistrer</button>
+        </div>
+    </dialog>
+
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="produits.js"></script>
     <script src="eleves.js"></script>
+    <script src="commun.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', function() {
         const form = document.getElementById('order-form');
-        const euros = new Intl.NumberFormat('fr-FR', { style: 'currency', currency: 'EUR' });
 
         // Génère les sections de produits à partir du catalogue (produits.js)
-        const escapeHtml = s => s.replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
         document.getElementById('catalogue').innerHTML = CATALOGUE.map(({ categorie, produits }) => `
             <section class="card category">
                 <h2>${escapeHtml(categorie)}</h2>
@@ -201,59 +216,84 @@
         toggleChequeNumber();
         refreshVendorField();
 
-        form.addEventListener('submit', async (event) => {
+        // Récapitulatif avant enregistrement
+        const recapDialog = document.getElementById('recap-dialog');
+        let commandeEnAttente = null;
+
+        form.addEventListener('submit', (event) => {
             event.preventDefault();
 
-            const vendorName = document.getElementById('vendor_name').value.toUpperCase();
-            const clientName = document.getElementById('client_name').value.toUpperCase();
-            const paymentMethod = getPaymentMethod();
-            const Niveau = document.getElementById('reseller-class').value;
-            const classe = document.getElementById('class-number').value;
-            const orderid = Niveau + classe;
-            const chequeNumber = paymentMethod === 'cheque' ? chequeNumberInput.value : null;
-            const totalAmount = totalprix;
+            const lignes = [...quantities]
+                .map(q => ({ produit: PRODUITS.find(p => p.code === q.dataset.col), qty: parseInt(q.value) || 0 }))
+                .filter(l => l.qty > 0);
 
-            const userConfirmed = confirm(`Le montant total est de ${euros.format(totalAmount)}. Voulez-vous continuer ?`);
-            if (!userConfirmed) return;
-
-            const orderData = {
-                order_id: orderid,
-                vendor_name: vendorName,
-                client_name: clientName,
-                payment_method: paymentMethod,
-                cheque_number: chequeNumber,
-                total_amount: totalAmount,
-            };
-            quantities.forEach(quantity => {
-                orderData[quantity.dataset.col + '_quantity'] = parseInt(quantity.value) || 0;
-            });
-
-            const { createClient } = supabase;
-            const _supabase = createClient('https://pjbhjhjmcxyiapzlqdpo.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBqYmhqaGptY3h5aWFwemxxZHBvIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MzA0NjY3MzUsImV4cCI6MjA0NjA0MjczNX0.p1nDmQ2mIpJRVZAaZIOT0db4MQZJV6V0TRILpoJ3UOs');
-
-            const { error } = await _supabase
-                .from('BDCElhuyar')
-                .insert([orderData]);
-
-            if (error) {
-                console.error('Erreur lors de l\'insertion:', error);
-                alert('Erreur lors de l\'enregistrement des données.');
+            if (lignes.length === 0) {
+                toast('Ajoutez au moins un article à la commande.', 'error');
                 return;
             }
 
-            alert('Données enregistrées avec succès !');
+            const paymentMethod = getPaymentMethod();
+            const niveau = resellerClassSelect.value;
+            const numero = classNumberSelect.value;
 
-            const keepVendorInfo = confirm("Souhaitez-vous garder le nom du vendeur et sa classe ?");
+            commandeEnAttente = {
+                order_id: niveau + numero,
+                vendor_name: vendorInput.value.trim().toUpperCase(),
+                client_name: document.getElementById('client_name').value.trim().toUpperCase(),
+                payment_method: paymentMethod,
+                cheque_number: paymentMethod === 'cheque' ? chequeNumberInput.value.trim() : null,
+                total_amount: totalprix,
+            };
+            quantities.forEach(q => {
+                commandeEnAttente[q.dataset.col + '_quantity'] = parseInt(q.value) || 0;
+            });
+
+            const c = commandeEnAttente;
+            document.getElementById('recap-sous-titre').textContent =
+                `Client : ${c.client_name} · Vendeur : ${c.vendor_name} (${niveau}e${numero})`;
+            document.getElementById('recap-lignes').innerHTML = lignes.map(l => `
+                <li><span class="qty">${l.qty} ×</span><span class="name">${escapeHtml(l.produit.nom)}</span><span class="price">${euros.format(l.qty * l.produit.prix)}</span></li>`).join('');
+            document.getElementById('recap-paiement').textContent = formatPaiement(c);
+            document.getElementById('recap-total').textContent = euros.format(c.total_amount);
+            recapDialog.showModal();
+        });
+
+        document.getElementById('recap-annuler').addEventListener('click', () => recapDialog.close());
+
+        document.getElementById('recap-confirmer').addEventListener('click', async (event) => {
+            const bouton = event.currentTarget;
+            bouton.disabled = true;
+            bouton.textContent = 'Enregistrement…';
+
+            const { error } = await db.from(TABLE).insert([commandeEnAttente]);
+
+            bouton.disabled = false;
+            bouton.textContent = 'Enregistrer';
+
+            if (error) {
+                console.error('Erreur lors de l\'insertion:', error);
+                toast('Erreur : la commande n\'a pas été enregistrée. Réessayez.', 'error');
+                return;
+            }
+
+            recapDialog.close();
+            toast(`Commande de ${commandeEnAttente.client_name} enregistrée (${euros.format(commandeEnAttente.total_amount)})`);
+
+            // Réinitialisation, en gardant éventuellement le vendeur et sa classe
+            const garder = document.getElementById('garder-vendeur').checked;
+            const niveau = resellerClassSelect.value, numero = classNumberSelect.value, vendeur = vendorInput.value;
             form.reset();
-            if (keepVendorInfo) {
-                document.getElementById('vendor_name').value = vendorName;
-                document.getElementById('reseller-class').value = Niveau;
-                document.getElementById('class-number').value = classe;
+            document.getElementById("garder-vendeur").checked = garder;
+            if (garder) {
+                resellerClassSelect.value = niveau;
+                classNumberSelect.value = numero;
+                vendorInput.value = vendeur;
             }
             refreshVendorField();
             updateTotals();
             toggleChequeNumber();
             window.scrollTo(0, 0);
+            (garder ? document.getElementById('client_name') : resellerClassSelect).focus();
         });
     });
     </script>
